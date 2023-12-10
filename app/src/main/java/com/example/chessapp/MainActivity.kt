@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
 
+    lateinit var chessGame: ChessGame
     lateinit var currentLanguage: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,6 +25,18 @@ class MainActivity : AppCompatActivity() {
         val langButton: ImageButton = findViewById(R.id.lang_button)
         langButton.setOnClickListener {
             showLanguageSelectionDialog()
+        }
+
+        val startResetButton: Button = findViewById(R.id.start_reset_button)
+        startResetButton.setOnClickListener {
+            chessGame.startOrResetGame()
+            updateUI()
+        }
+
+        val pauseResumeButton: Button = findViewById(R.id.pause_resume_button)
+        pauseResumeButton.setOnClickListener {
+            chessGame.pauseOrResumeGame()
+            updateUI()
         }
     }
 

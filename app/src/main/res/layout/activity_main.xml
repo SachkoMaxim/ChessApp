@@ -137,9 +137,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="10dp"
                     android:layout_weight="1"
+                    android:backgroundTint="@color/butt_color"
                     android:enabled="false"
                     android:text="Pause"
-                    android:tooltipText="Pauses game\nor resumes\nit if you\npaused it"/>
+                    android:tooltipText="Pauses game or resumes it if you paused it"/>
 
             </LinearLayout>
 
