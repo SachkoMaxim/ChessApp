@@ -25,6 +25,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var currentMoveTV: TextView
     lateinit var langButton: ImageButton
     lateinit var informButton: ImageButton
+
     private var isGameStarted = false
     private var isGamePaused = true
     private var isCheckmate = false
@@ -88,12 +89,16 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateUI() {
         if (currentLanguage == "English") {
-            startResetButton.text = if (startResetButton.text == "Почати" || startResetButton.text == "Start") "Start" else "Reset"
-            pauseResumeButton.text = if (pauseResumeButton.text == "Пауза" || pauseResumeButton.text == "Pause") "Pause" else "Resume"
+            startResetButton.text = if (startResetButton.text == "Почати" ||
+                startResetButton.text == "Start") "Start" else "Reset"
+            pauseResumeButton.text = if (pauseResumeButton.text == "Пауза" ||
+                pauseResumeButton.text == "Pause") "Pause" else "Resume"
             lastMoveText.text = "Last move:"
             mainTimerText.text = "Game time:"
             currentMoveText.text = "Current move:"
-            currentMoveTV.text = if (currentMoveTV.text == "БІЛИЙ\n" || currentMoveTV.text == "WHITE\n") "WHITE\n" else "BLACK\n"
+            currentMoveTV.text = if (currentMoveTV.text == "\n") "\n" else
+                if (currentMoveTV.text == "БІЛИЙ\n" ||
+                    currentMoveTV.text == "WHITE\n") "WHITE\n" else "BLACK\n"
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 startResetButton.tooltipText = "Starts game or resets it if you started playing"
                 pauseResumeButton.tooltipText = "Pauses game or resumes it if you paused it"
@@ -101,12 +106,16 @@ class MainActivity : AppCompatActivity() {
                 informButton.tooltipText = "Gives information on how to play the game"
             }
         } else {
-            startResetButton.text = if (startResetButton.text == "Start" || startResetButton.text == "Почати") "Почати" else "Скинути"
-            pauseResumeButton.text = if (pauseResumeButton.text == "Pause" || pauseResumeButton.text == "Пауза") "Пауза" else "Відновити"
+            startResetButton.text = if (startResetButton.text == "Start" ||
+                startResetButton.text == "Почати") "Почати" else "Скинути"
+            pauseResumeButton.text = if (pauseResumeButton.text == "Pause" ||
+                pauseResumeButton.text == "Пауза") "Пауза" else "Відновити"
             lastMoveText.text = "Останній хід:"
             mainTimerText.text = "Час гри:"
             currentMoveText.text = "Поточний хід:"
-            currentMoveTV.text = if (currentMoveTV.text == "WHITE\n" || currentMoveTV.text == "БІЛИЙ\n") "БІЛИЙ\n" else "ЧОРНИЙ\n"
+            currentMoveTV.text = if (currentMoveTV.text == "\n") "\n" else
+                if (currentMoveTV.text == "WHITE\n" ||
+                    currentMoveTV.text == "БІЛИЙ\n") "БІЛИЙ\n" else "ЧОРНИЙ\n"
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 startResetButton.tooltipText = "Запускає гру або скидає її, якщо ви почали грати"
                 pauseResumeButton.tooltipText = "Призупиняє гру або відновлює її, якщо ви її призупинили"
@@ -116,7 +125,45 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun actBoard() {}
+    private fun actBoard() {
+        boardGrid.apply {
+            alignmentMode = GridLayout.ALIGN_BOUNDS
+            columnCount = 8
+            rowCount = 8
+        }
+        var currentIndex = 0
+        for (i in 0..7) {
+            for (j in 0..7) {
+                val cellButton = createCellButton()
+                boardGrid.addView(cellButton, currentIndex++)
+
+                val param = createCellLayoutParams(j, i)
+                cellButton.layoutParams = param
+            }
+        }
+    }
+
+    private fun createCellButton(): Button {
+        val cellButton = Button(activity)
+        cellButton.textSize = 5f
+        cellButton.setOnClickListener {
+            // Handle button click
+        }
+        return cellButton
+    }
+
+    private fun createCellLayoutParams(j: Int, i: Int): GridLayout.LayoutParams {
+        return GridLayout.LayoutParams().apply {
+            height = boardGrid.width / 8
+            width = boardGrid.width / 8
+            bottomMargin = 1
+            leftMargin = 0
+            topMargin = 0
+            rightMargin = 1
+            columnSpec = GridLayout.spec(j)
+            rowSpec = GridLayout.spec(7 - i)
+        }
+    }
 
     private fun clearBoard() {
         val boardGrid: GridLayout = activity.findViewById(R.id.board_grid)
@@ -148,7 +195,7 @@ class MainActivity : AppCompatActivity() {
             text = "\n"
         }
         activity.findViewById<TextView>(R.id.current_move_tv).apply {
-            text = if (currentLanguage == "English") "WHITE\n" else "БІЛИЙ\n"
+            text = "\n"
         }
     }
 
