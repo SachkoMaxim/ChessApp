@@ -31,7 +31,8 @@
                 app:layout_constraintBottom_toTopOf="@id/board_grid"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:gravity="center_horizontal" />
 
             <GridLayout
                 android:id="@+id/board_grid"
@@ -65,7 +66,8 @@
                 android:text="Game time:"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:id="@+id/main_timer_text"/>
+                android:id="@+id/main_timer_text"
+                android:gravity="center_horizontal" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -73,7 +75,8 @@
                 android:text="00:00:00"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:id="@+id/main_timer"/>
+                android:id="@+id/main_timer"
+                android:gravity="center_horizontal" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -81,7 +84,8 @@
                 android:text=""
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:id="@+id/space"/>
+                android:id="@+id/space"
+                android:gravity="center_horizontal" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -89,7 +93,8 @@
                 android:text="Last move:"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:id="@+id/last_move_text"/>
+                android:id="@+id/last_move_text"
+                android:gravity="center_horizontal" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -97,7 +102,8 @@
                 android:text="\n"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:id="@+id/last_move_tv"/>
+                android:id="@+id/last_move_tv"
+                android:gravity="center_horizontal" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -105,7 +111,8 @@
                 android:text="Current move:"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:id="@+id/current_move_text"/>
+                android:id="@+id/current_move_text"
+                android:gravity="center_horizontal" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -113,7 +120,8 @@
                 android:text="\n"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:id="@+id/current_move_tv"/>
+                android:id="@+id/current_move_tv"
+                android:gravity="center_horizontal" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -154,7 +162,8 @@
                     android:text=""
                     android:textAlignment="center"
                     android:textColor="@color/white"
-                    android:id="@+id/space_buttons"/>
+                    android:id="@+id/space_buttons"
+                    android:gravity="center_horizontal" />
 
             </LinearLayout>
 
