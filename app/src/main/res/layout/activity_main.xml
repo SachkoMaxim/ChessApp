@@ -62,22 +62,6 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Current move:"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:id="@+id/current_move_text"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="WHITE\n"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:id="@+id/current_move_tv"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:text="Game time:"
                 android:textAlignment="center"
                 android:textColor="@color/white"
@@ -115,6 +99,21 @@
                 android:textColor="@color/white"
                 android:id="@+id/last_move_tv"/>
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Current move:"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:id="@+id/current_move_text"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="\n"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:id="@+id/current_move_tv"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -129,7 +128,7 @@
                     android:layout_weight="1"
                     android:backgroundTint="@color/butt_color"
                     android:text="Start"
-                    android:tooltipText="Starts game\nor resets it\nif you\nstarted\nplaying"/>
+                    android:tooltipText="Starts game or resets it if you started playing"/>
 
                 <Button
                     android:id="@+id/pause_resume_button"
@@ -172,7 +171,7 @@
                     android:text=""
                     android:layout_weight="1"
                     android:id="@+id/lang_button"
-                    android:tooltipText="Changes app\nlanguage"/>
+                    android:tooltipText="Changes app language"/>
 
                 <ImageButton
                     android:layout_width="wrap_content"
@@ -182,7 +181,7 @@
                     android:text=""
                     android:layout_weight="1"
                     android:id="@+id/inf_button"
-                    android:tooltipText="Gives information\non how to\nplay the game"/>
+                    android:tooltipText="Gives information on how to play the game"/>
 
             </LinearLayout>
 
