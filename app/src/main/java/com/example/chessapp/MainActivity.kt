@@ -1,16 +1,33 @@
 package com.example.chessapp
 
+import android.app.Activity
 import android.os.Build
 import android.os.Bundle
-import android.view.View
-import android.widget.*
+import android.widget.Button
+import android.widget.GridLayout
+import android.widget.ImageButton
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var chessGame: ChessGame
+    lateinit var activity: Activity
     lateinit var currentLanguage: String
+    lateinit var boardGrid: GridLayout
+    lateinit var startResetButton: Button
+    lateinit var pauseResumeButton: Button
+    lateinit var timerTextView: TextView
+    lateinit var lastMoveText: TextView
+    lateinit var mainTimerText: TextView
+    lateinit var currentMoveText: TextView
+    lateinit var currentMoveTV: TextView
+    lateinit var langButton: ImageButton
+    lateinit var informButton: ImageButton
+    private var isGameStarted = false
+    private var isGamePaused = true
+    private var isCheckmate = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,21 +39,32 @@ class MainActivity : AppCompatActivity() {
 
         currentLanguage = "English"
 
-        val langButton: ImageButton = findViewById(R.id.lang_button)
+        activity = this
+        boardGrid = findViewById(R.id.board_grid)
+        startResetButton = findViewById(R.id.start_reset_button)
+        pauseResumeButton = findViewById(R.id.pause_resume_button)
+        lastMoveText = findViewById(R.id.last_move_text)
+        mainTimerText = findViewById(R.id.main_timer_text)
+        currentMoveText = findViewById(R.id.current_move_text)
+        currentMoveTV = findViewById(R.id.current_move_tv)
+        langButton = findViewById(R.id.lang_button)
+        informButton = findViewById(R.id.inf_button)
+        timerTextView = findViewById(R.id.main_timer)
+
         langButton.setOnClickListener {
             showLanguageSelectionDialog()
         }
 
-        val startResetButton: Button = findViewById(R.id.start_reset_button)
         startResetButton.setOnClickListener {
-            chessGame.startOrResetGame()
-            updateUI()
+            startOrResetGame()
         }
 
-        val pauseResumeButton: Button = findViewById(R.id.pause_resume_button)
         pauseResumeButton.setOnClickListener {
-            chessGame.pauseOrResumeGame()
-            updateUI()
+            pauseOrResumeGame()
+        }
+
+        informButton.setOnClickListener {
+            isCheckmate = !isCheckmate
         }
     }
 
@@ -44,7 +72,7 @@ class MainActivity : AppCompatActivity() {
         val languageOptions = arrayOf("English", "Українська")
 
         val builder = AlertDialog.Builder(this)
-        builder.setTitle(if(currentLanguage == "English") "Select Language" else "Оберіть мову")
+        builder.setTitle(if (currentLanguage == "English") "Select Language" else "Оберіть мову")
             .setItems(languageOptions) { _, which ->
                 val selectedLanguage = languageOptions[which]
                 changeLanguage(selectedLanguage)
@@ -59,22 +87,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateUI() {
-        val startResetButton: Button = findViewById(R.id.start_reset_button)
-        val pauseResumeButton: Button = findViewById(R.id.pause_resume_button)
-        val lastMoveText: TextView = findViewById(R.id.last_move_text)
-        val mainTimerText: TextView = findViewById(R.id.main_timer_text)
-        val currentMoveText: TextView = findViewById(R.id.current_move_text)
-        val currentMoveTV: TextView = findViewById(R.id.current_move_tv)
-        val langButton: ImageButton = findViewById(R.id.lang_button)
-        val informButton: ImageButton = findViewById(R.id.inf_button)
-
         if (currentLanguage == "English") {
-            startResetButton.text = "Start"
-            pauseResumeButton.text = "Pause"
+            startResetButton.text = if (startResetButton.text == "Почати" || startResetButton.text == "Start") "Start" else "Reset"
+            pauseResumeButton.text = if (pauseResumeButton.text == "Пауза" || pauseResumeButton.text == "Pause") "Pause" else "Resume"
             lastMoveText.text = "Last move:"
             mainTimerText.text = "Game time:"
             currentMoveText.text = "Current move:"
-            currentMoveTV.text = if(currentMoveTV.text == "БІЛИЙ\n") "WHITE\n" else "BLACK\n"
+            currentMoveTV.text = if (currentMoveTV.text == "БІЛИЙ\n" || currentMoveTV.text == "WHITE\n") "WHITE\n" else "BLACK\n"
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 startResetButton.tooltipText = "Starts game or resets it if you started playing"
                 pauseResumeButton.tooltipText = "Pauses game or resumes it if you paused it"
@@ -82,12 +101,12 @@ class MainActivity : AppCompatActivity() {
                 informButton.tooltipText = "Gives information on how to play the game"
             }
         } else {
-            startResetButton.text = "Почати"
-            pauseResumeButton.text = "Пауза"
+            startResetButton.text = if (startResetButton.text == "Start" || startResetButton.text == "Почати") "Почати" else "Скинути"
+            pauseResumeButton.text = if (pauseResumeButton.text == "Pause" || pauseResumeButton.text == "Пауза") "Пауза" else "Відновити"
             lastMoveText.text = "Останній хід:"
             mainTimerText.text = "Час гри:"
             currentMoveText.text = "Поточний хід:"
-            currentMoveTV.text = if(currentMoveTV.text == "WHITE\n") "БІЛИЙ\n" else "ЧОРНИЙ\n"
+            currentMoveTV.text = if (currentMoveTV.text == "WHITE\n" || currentMoveTV.text == "БІЛИЙ\n") "БІЛИЙ\n" else "ЧОРНИЙ\n"
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 startResetButton.tooltipText = "Запускає гру або скидає її, якщо ви почали грати"
                 pauseResumeButton.tooltipText = "Призупиняє гру або відновлює її, якщо ви її призупинили"
@@ -95,5 +114,80 @@ class MainActivity : AppCompatActivity() {
                 informButton.tooltipText = "Дає інформацію про те, як грати в гру"
             }
         }
+    }
+
+    private fun actBoard() {}
+
+    private fun clearBoard() {
+        val boardGrid: GridLayout = activity.findViewById(R.id.board_grid)
+        boardGrid.removeAllViews()
+    }
+
+    private fun startOrResetGame() {
+        if (!isGameStarted) {
+            startGame()
+        } else {
+            resetGame()
+        }
+    }
+
+    private fun resetGame() {
+        isGameStarted = false
+        val startResText = if (currentLanguage == "English") "Start" else "Почати"
+        startResetButton.text = startResText
+        pauseGame()
+        val pauseResText = if (currentLanguage == "English") "Pause" else "Пауза"
+        pauseResumeButton.text = pauseResText
+        pauseResumeButton.isEnabled = false
+        clearBoard()
+        clearGameInfo()
+    }
+
+    private fun clearGameInfo() {
+        activity.findViewById<TextView>(R.id.last_move_tv).apply {
+            text = "\n"
+        }
+        activity.findViewById<TextView>(R.id.current_move_tv).apply {
+            text = if (currentLanguage == "English") "WHITE\n" else "БІЛИЙ\n"
+        }
+    }
+
+    private fun startGame() {
+        isGameStarted = true
+        val startResText = if (currentLanguage == "English") "Reset" else "Скинути"
+        startResetButton.text = startResText
+        pauseResumeButton.isEnabled = true
+        activity.findViewById<TextView>(R.id.current_move_tv).apply {
+            text = if (currentLanguage == "English") "WHITE\n" else "БІЛИЙ\n"
+        }
+        actBoard()
+        resumeGame()
+    }
+
+    private fun pauseOrResumeGame() {
+        if (!isCheckmate) {
+            return
+        }
+        if (isGamePaused) {
+            resumeGame()
+        } else {
+            pauseGame()
+        }
+    }
+
+    private fun pauseGame() {
+        isGamePaused = true
+        val pauseResText = if (currentLanguage == "English") "Resume" else "Відновити"
+        pauseResumeButton.text = pauseResText
+        val toastPauseText = if (currentLanguage == "English") "Game is paused" else "Гру зупинено"
+        Toast.makeText(activity, toastPauseText, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun resumeGame() {
+        isGamePaused = false
+        val pauseResText = if (currentLanguage == "English") "Pause" else "Пауза"
+        pauseResumeButton.text = pauseResText
+        val toastResumeText = if (currentLanguage == "English") "Game is resumed" else "Гру відновлено"
+        Toast.makeText(activity, toastResumeText, Toast.LENGTH_SHORT).show()
     }
 }
