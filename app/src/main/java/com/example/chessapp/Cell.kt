@@ -22,4 +22,20 @@ class Cell(button: Button, piece: Piece?, board: ChessBoard) {
 
     fun getX() = x
     fun getY() = y
+
+    fun getPossibleMoves(isCheckingForMate: Boolean = false): MutableList<Pair<Int, Int>> {
+        val possibleMoves = mutableListOf<Pair<Int, Int>>()
+        if (piece == null) {
+            return possibleMoves
+        }
+        when (piece!!::class.java.simpleName) {
+            "Pawn" -> {}
+            "Rook" -> {}
+            "Knight" -> {}
+            "Bishop" -> {}
+            "Queen" -> {}
+            "King" -> {}
+        }
+        return possibleMoves
+    }
 }
