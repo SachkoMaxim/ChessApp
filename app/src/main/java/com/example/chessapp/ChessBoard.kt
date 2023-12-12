@@ -8,35 +8,35 @@ import android.widget.GridLayout
 class ChessBoard(activity: Activity) {
 
     companion object {
+        private const val BOARD_SIZE = 8
         var WHITE = if (MainActivity.currentLanguage == "English") "WHITE" else "БІЛИЙ"
         var BLACK = if (MainActivity.currentLanguage == "English") "BLACK" else "ЧОРНИЙ"
     }
 
     private val activity = activity
-    private val cells: Array<Array<Cell?>> = arrayOf(
-        arrayOfNulls(8),
-        arrayOfNulls(8),
-        arrayOfNulls(8),
-        arrayOfNulls(8),
-        arrayOfNulls(8),
-        arrayOfNulls(8),
-        arrayOfNulls(8),
-        arrayOfNulls(8)
-    )
+    private val cells: Array<Array<Cell?>> = Array(BOARD_SIZE) { Array(BOARD_SIZE) { null } }
     private lateinit var whiteCells: MutableList<Cell>
     private lateinit var blackCells: MutableList<Cell>
     private lateinit var gridLayout: GridLayout
     private lateinit var mainActivity: MainActivity
 
     private val startMap = arrayOf(
-        arrayOf<Piece?>(Rook(WHITE), Knight(WHITE), Bishop(WHITE), Queen(WHITE), King(WHITE), Bishop(WHITE), Knight(WHITE), Rook(WHITE)),
-        arrayOf<Piece?>(Pawn(WHITE), Pawn(WHITE), Pawn(WHITE), Pawn(WHITE), Pawn(WHITE), Pawn(WHITE), Pawn(WHITE), Pawn(WHITE)),
+        arrayOf<Piece?>(
+            Rook(WHITE), Knight(WHITE), Bishop(WHITE), Queen(WHITE), King(WHITE), Bishop(WHITE), Knight(WHITE), Rook(WHITE)
+        ),
+        arrayOf<Piece?>(
+            Pawn(WHITE), Pawn(WHITE), Pawn(WHITE), Pawn(WHITE), Pawn(WHITE), Pawn(WHITE), Pawn(WHITE), Pawn(WHITE)
+        ),
         arrayOf<Piece?>(null, null, null, null, null, null, null, null),
         arrayOf<Piece?>(null, null, null, null, null, null, null, null),
         arrayOf<Piece?>(null, null, null, null, null, null, null, null),
         arrayOf<Piece?>(null, null, null, null, null, null, null, null),
-        arrayOf<Piece?>(Pawn(BLACK), Pawn(BLACK), Pawn(BLACK), Pawn(BLACK), Pawn(BLACK), Pawn(BLACK), Pawn(BLACK), Pawn(BLACK)),
-        arrayOf<Piece?>(Rook(BLACK), Knight(BLACK), Bishop(BLACK), Queen(BLACK), King(BLACK), Bishop(BLACK), Knight(BLACK), Rook(BLACK)),
+        arrayOf<Piece?>(
+            Pawn(BLACK), Pawn(BLACK), Pawn(BLACK), Pawn(BLACK), Pawn(BLACK), Pawn(BLACK), Pawn(BLACK), Pawn(BLACK)
+        ),
+        arrayOf<Piece?>(
+            Rook(BLACK), Knight(BLACK), Bishop(BLACK), Queen(BLACK), King(BLACK), Bishop(BLACK), Knight(BLACK), Rook(BLACK)
+        ),
     )
 
     private var selectedCell: Cell? = null
@@ -52,8 +52,8 @@ class ChessBoard(activity: Activity) {
         isMate = false
         val cellsMutableList = mutableListOf<MutableList<Cell>>()
         var childCounter = 0
-        for (i in 0..7) {
-            for (j in 0..7) {
+        for (i in 0 until BOARD_SIZE) {
+            for (j in 0 until BOARD_SIZE) {
                 val button = gridLayout.getChildAt(childCounter++)!! as Button
                 val newCell = Cell(button, startMap[i][j], this)
                 newCell.setCoords(i, j)
@@ -69,8 +69,8 @@ class ChessBoard(activity: Activity) {
 
     private fun setCellsList(color: String): MutableList<Cell> {
         val colorCells = mutableListOf<Cell>()
-        for (i in 0..7) {
-            for (j in 0..7) {
+        for (i in 0 until BOARD_SIZE) {
+            for (j in 0 until BOARD_SIZE) {
                 if (cells[i][j]!!.piece?.color == color) {
                     colorCells.add(cells[i][j]!!)
                 }
@@ -80,8 +80,8 @@ class ChessBoard(activity: Activity) {
     }
 
     private fun setCellButtonsOnClickListeners() {
-        for (i in 0..7) {
-            for (j in 0..7) {
+        for (i in 0 until BOARD_SIZE) {
+            for (j in 0 until BOARD_SIZE) {
                 val cell = cells[i][j]!!
                 cell.button.setOnClickListener {
                     Log.d("Cell click", "You clicked on cell ${getChessCoords(cell.getX()!!, cell.getY()!!)}!")
@@ -98,16 +98,16 @@ class ChessBoard(activity: Activity) {
     }
 
     fun switchButtonsBlocking(isGamePaused: Boolean) {
-        for (i in 0..7) {
-            for (j in 0..7) {
+        for (i in 0 until BOARD_SIZE) {
+            for (j in 0 until BOARD_SIZE) {
                 cells[i][j]!!.button.isClickable = !isGamePaused
             }
         }
     }
 
     fun show() {
-        for (i in 0..7) {
-            for (j in 0..7) {
+        for (i in 0 until BOARD_SIZE) {
+            for (j in 0 until BOARD_SIZE) {
                 if (cells[i][j]!!.piece != null) {
                     cells[i][j]!!.button.setBackgroundResource(cells[i][j]!!.piece!!.getDrawableID())
                 } else {
