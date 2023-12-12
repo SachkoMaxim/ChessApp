@@ -13,8 +13,10 @@ import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
 
+    companion object {
+        lateinit var currentLanguage: String
+    }
     lateinit var activity: Activity
-    lateinit var currentLanguage: String
     lateinit var boardGrid: GridLayout
     lateinit var startResetButton: Button
     lateinit var pauseResumeButton: Button
@@ -25,7 +27,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var currentMoveTV: TextView
     lateinit var langButton: ImageButton
     lateinit var informButton: ImageButton
-
+    lateinit var board: ChessBoard
     private var isGameStarted = false
     private var isGamePaused = true
     private var isCheckmate = false
@@ -122,6 +124,8 @@ class MainActivity : AppCompatActivity() {
                 langButton.tooltipText = "Змінює мову програми"
                 informButton.tooltipText = "Дає інформацію про те, як грати в гру"
             }
+            ChessBoard.WHITE = if (currentLanguage == "English") "WHITE" else "БІЛИЙ"
+            ChessBoard.BLACK = if (currentLanguage == "English") "BLACK" else "ЧОРНИЙ"
         }
     }
 
@@ -141,6 +145,9 @@ class MainActivity : AppCompatActivity() {
                 cellButton.layoutParams = param
             }
         }
+        board = ChessBoard(activity)
+        board.init(boardGrid, this)
+        board.show()
     }
 
     private fun createCellButton(): Button {
@@ -220,6 +227,7 @@ class MainActivity : AppCompatActivity() {
         } else {
             pauseGame()
         }
+        board.switchButtonsBlocking(isGamePaused)
     }
 
     private fun pauseGame() {
