@@ -32,31 +32,19 @@ class Cell(button: Button, piece: Piece?, board: ChessBoard) {
             "Pawn" -> {
                 val direction = if (piece!!.color == ChessBoard.WHITE) 1 else -1
 
-                // Перевірка можливості руху вперед на одну клітинку
-                if (coordsInRange(x!! + direction, y!!) && cells[x!! + direction][y!!]!!.piece == null) {
-                    possibleMoves.add(Pair(x!! + direction, y!!))
+                // Checking the ability to move forward one cell
+                addForwardMove(possibleMoves, direction, 1)
 
-                    // Перевірка можливості подвійного ходу для пішака на початку гри
-                    if (!piece!!.getIsMoved() && cells[x!! + 2 * direction][y!!]!!.piece == null) {
-                        possibleMoves.add(Pair(x!! + 2 * direction, y!!))
-                    }
+                // Checking the possibility of a double move at the beginning of the game
+                if (!piece!!.getIsMoved()) {
+                    addForwardMove(possibleMoves, direction, 2)
                 }
 
-                // Перевірка можливості атаки по діагоналі
-                if (coordsInRange(x!! + direction, y!! + 1) &&
-                    cells[x!! + direction][y!! + 1]!!.piece != null &&
-                    cells[x!! + direction][y!! + 1]!!.piece?.color != piece!!.color
-                ) {
-                    possibleMoves.add(Pair(x!! + direction, y!! + 1))
-                }
-
-                if (coordsInRange(x!! + direction, y!! - 1) &&
-                    cells[x!! + direction][y!! - 1]!!.piece != null &&
-                    cells[x!! + direction][y!! - 1]!!.piece?.color != piece!!.color
-                ) {
-                    possibleMoves.add(Pair(x!! + direction, y!! - 1))
-                }
+                // Checking the possibility of a diagonal attack
+                addDiagonalAttack(possibleMoves, direction, 1)
+                addDiagonalAttack(possibleMoves, direction, -1)
             }
+
             "Rook" -> {}
             "Knight" -> {}
             "Bishop" -> {}
@@ -64,6 +52,27 @@ class Cell(button: Button, piece: Piece?, board: ChessBoard) {
             "King" -> {}
         }
         return possibleMoves
+    }
+
+    private fun addForwardMove(possibleMoves: MutableList<Pair<Int, Int>>, direction: Int, steps: Int) {
+        val newX = x!! + direction * steps
+        val newY = y!!
+
+        if (coordsInRange(newX, newY) && cells[newX][newY]!!.piece == null) {
+            possibleMoves.add(Pair(newX, newY))
+        }
+    }
+
+    private fun addDiagonalAttack(possibleMoves: MutableList<Pair<Int, Int>>, direction: Int, offset: Int) {
+        val newX = x!! + direction
+        val newY = y!! + offset
+
+        if (coordsInRange(newX, newY) &&
+            cells[newX][newY]!!.piece != null &&
+            cells[newX][newY]!!.piece?.color != piece!!.color
+        ) {
+            possibleMoves.add(Pair(newX, newY))
+        }
     }
 
     private fun coordsInRange(x: Int, y: Int): Boolean {
