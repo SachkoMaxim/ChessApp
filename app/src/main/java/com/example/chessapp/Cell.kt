@@ -37,7 +37,12 @@ class Cell(button: Button, piece: Piece?, board: ChessBoard) {
 
                 // Checking the possibility of a double move at the beginning of the game
                 if (!piece!!.getIsMoved()) {
-                    addForwardMove(possibleMoves, direction, 2)
+                    // Checking if there is no other piece in front of the pawn
+                    val newX = x!! + direction * 2
+                    val newY = y!!
+                    if (coordsInRange(newX, newY) && cells[newX][newY]!!.piece == null) {
+                        possibleMoves.add(Pair(newX, newY))
+                    }
                 }
 
                 // Checking the possibility of a diagonal attack
