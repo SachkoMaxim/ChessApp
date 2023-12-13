@@ -29,7 +29,34 @@ class Cell(button: Button, piece: Piece?, board: ChessBoard) {
             return possibleMoves
         }
         when (piece!!::class.java.simpleName) {
-            "Pawn" -> {}
+            "Pawn" -> {
+                val direction = if (piece!!.color == ChessBoard.WHITE) 1 else -1
+
+                // Перевірка можливості руху вперед на одну клітинку
+                if (coordsInRange(x!! + direction, y!!) && cells[x!! + direction][y!!]!!.piece == null) {
+                    possibleMoves.add(Pair(x!! + direction, y!!))
+
+                    // Перевірка можливості подвійного ходу для пішака на початку гри
+                    if (!piece!!.getIsMoved() && cells[x!! + 2 * direction][y!!]!!.piece == null) {
+                        possibleMoves.add(Pair(x!! + 2 * direction, y!!))
+                    }
+                }
+
+                // Перевірка можливості атаки по діагоналі
+                if (coordsInRange(x!! + direction, y!! + 1) &&
+                    cells[x!! + direction][y!! + 1]!!.piece != null &&
+                    cells[x!! + direction][y!! + 1]!!.piece?.color != piece!!.color
+                ) {
+                    possibleMoves.add(Pair(x!! + direction, y!! + 1))
+                }
+
+                if (coordsInRange(x!! + direction, y!! - 1) &&
+                    cells[x!! + direction][y!! - 1]!!.piece != null &&
+                    cells[x!! + direction][y!! - 1]!!.piece?.color != piece!!.color
+                ) {
+                    possibleMoves.add(Pair(x!! + direction, y!! - 1))
+                }
+            }
             "Rook" -> {}
             "Knight" -> {}
             "Bishop" -> {}
@@ -37,5 +64,9 @@ class Cell(button: Button, piece: Piece?, board: ChessBoard) {
             "King" -> {}
         }
         return possibleMoves
+    }
+
+    private fun coordsInRange(x: Int, y: Int): Boolean {
+        return (x in 0..7 && y in 0..7)
     }
 }
