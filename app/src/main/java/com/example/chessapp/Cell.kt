@@ -67,6 +67,10 @@ class Cell(button: Button, piece: Piece?, board: ChessBoard) {
     }
 
     private fun coordsInRange(x: Int, y: Int): Boolean {
-        return (x in 0..7 && y in 0..7)
+        return (x in 0 until ChessBoard.BOARD_SIZE && y in 0 until ChessBoard.BOARD_SIZE)
+    }
+
+    fun promotePawn() {
+        piece = Queen(piece!!.color)
     }
 }

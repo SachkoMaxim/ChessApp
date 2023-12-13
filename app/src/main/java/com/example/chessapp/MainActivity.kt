@@ -98,9 +98,6 @@ class MainActivity : AppCompatActivity() {
             lastMoveText.text = "Last move:"
             mainTimerText.text = "Game time:"
             currentMoveText.text = "Current move:"
-            currentMoveTV.text = if (currentMoveTV.text == "\n") "\n" else
-                if (currentMoveTV.text == "БІЛИЙ\n" ||
-                    currentMoveTV.text == "WHITE\n") "WHITE\n" else "BLACK\n"
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 startResetButton.tooltipText = "Starts game or resets it if you started playing"
                 pauseResumeButton.tooltipText = "Pauses game or resumes it if you paused it"
@@ -115,17 +112,12 @@ class MainActivity : AppCompatActivity() {
             lastMoveText.text = "Останній хід:"
             mainTimerText.text = "Час гри:"
             currentMoveText.text = "Поточний хід:"
-            currentMoveTV.text = if (currentMoveTV.text == "\n") "\n" else
-                if (currentMoveTV.text == "WHITE\n" ||
-                    currentMoveTV.text == "БІЛИЙ\n") "БІЛИЙ\n" else "ЧОРНИЙ\n"
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 startResetButton.tooltipText = "Запускає гру або скидає її, якщо ви почали грати"
                 pauseResumeButton.tooltipText = "Призупиняє гру або відновлює її, якщо ви її призупинили"
                 langButton.tooltipText = "Змінює мову програми"
                 informButton.tooltipText = "Дає інформацію про те, як грати в гру"
             }
-            ChessBoard.WHITE = if (currentLanguage == "English") "WHITE" else "БІЛИЙ"
-            ChessBoard.BLACK = if (currentLanguage == "English") "BLACK" else "ЧОРНИЙ"
         }
     }
 
@@ -212,7 +204,7 @@ class MainActivity : AppCompatActivity() {
         startResetButton.text = startResText
         pauseResumeButton.isEnabled = true
         activity.findViewById<TextView>(R.id.current_move_tv).apply {
-            text = if (currentLanguage == "English") "WHITE\n" else "БІЛИЙ\n"
+            text = "WHITE\n"
         }
         actBoard()
         resumeGame()
