@@ -46,14 +46,21 @@ class Cell(button: Button, piece: Piece?, board: ChessBoard) {
             }
 
             "Rook" -> {
-                addHorizontalAndVerticalMoves(possibleMoves, 1, 0)
-                addHorizontalAndVerticalMoves(possibleMoves, -1, 0)
-                addHorizontalAndVerticalMoves(possibleMoves, 0, 1)
-                addHorizontalAndVerticalMoves(possibleMoves, 0, -1)
+                addHorizAndVertOrDiagMoves(possibleMoves, 1, 0)
+                addHorizAndVertOrDiagMoves(possibleMoves, -1, 0)
+                addHorizAndVertOrDiagMoves(possibleMoves, 0, 1)
+                addHorizAndVertOrDiagMoves(possibleMoves, 0, -1)
             }
 
             "Knight" -> {}
-            "Bishop" -> {}
+
+            "Bishop" -> {
+                addHorizAndVertOrDiagMoves(possibleMoves, 1, 1)
+                addHorizAndVertOrDiagMoves(possibleMoves, 1, -1)
+                addHorizAndVertOrDiagMoves(possibleMoves, -1, 1)
+                addHorizAndVertOrDiagMoves(possibleMoves, -1, -1)
+            }
+
             "Queen" -> {}
             "King" -> {}
         }
@@ -89,7 +96,7 @@ class Cell(button: Button, piece: Piece?, board: ChessBoard) {
         }
     }
 
-    private fun addHorizontalAndVerticalMoves(
+    private fun addHorizAndVertOrDiagMoves(
         possibleMoves: MutableList<Pair<Int, Int>>,
         directionX: Int,
         directionY: Int
