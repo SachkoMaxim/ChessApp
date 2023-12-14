@@ -61,7 +61,17 @@ class Cell(button: Button, piece: Piece?, board: ChessBoard) {
                 addHorizAndVertOrDiagMoves(possibleMoves, -1, -1)
             }
 
-            "Queen" -> {}
+            "Queen" -> {
+                addHorizAndVertOrDiagMoves(possibleMoves, 1, 0)
+                addHorizAndVertOrDiagMoves(possibleMoves, -1, 0)
+                addHorizAndVertOrDiagMoves(possibleMoves, 0, 1)
+                addHorizAndVertOrDiagMoves(possibleMoves, 0, -1)
+                addHorizAndVertOrDiagMoves(possibleMoves, 1, 1)
+                addHorizAndVertOrDiagMoves(possibleMoves, 1, -1)
+                addHorizAndVertOrDiagMoves(possibleMoves, -1, 1)
+                addHorizAndVertOrDiagMoves(possibleMoves, -1, -1)
+            }
+
             "King" -> {}
         }
         return possibleMoves
