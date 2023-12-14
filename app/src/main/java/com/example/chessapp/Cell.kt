@@ -44,7 +44,14 @@ class Cell(button: Button, piece: Piece?, board: ChessBoard) {
                 addDiagonalAttack(possibleMoves, direction, 1)
                 addDiagonalAttack(possibleMoves, direction, -1)
             }
-            "Rook" -> {}
+
+            "Rook" -> {
+                addHorizontalMoves(possibleMoves, 1, 0)
+                addHorizontalMoves(possibleMoves, -1, 0)
+                addVerticalMoves(possibleMoves, 0, 1)
+                addVerticalMoves(possibleMoves, 0, -1)
+            }
+
             "Knight" -> {}
             "Bishop" -> {}
             "Queen" -> {}
@@ -70,6 +77,32 @@ class Cell(button: Button, piece: Piece?, board: ChessBoard) {
             cells[newX][newY]!!.piece != null &&
             cells[newX][newY]!!.piece?.color != piece!!.color
         ) {
+            possibleMoves.add(Pair(newX, newY))
+        }
+    }
+
+    private fun addHorizontalMoves(possibleMoves: MutableList<Pair<Int, Int>>, directionX: Int, directionY: Int) {
+        for (i in 1 until ChessBoard.BOARD_SIZE) {
+            val newX = x!! + i * directionX
+            val newY = y!! + i * directionY
+
+            if (!coordsInRange(newX, newY) || cells[newX][newY]!!.piece != null) {
+                break
+            }
+
+            possibleMoves.add(Pair(newX, newY))
+        }
+    }
+
+    private fun addVerticalMoves(possibleMoves: MutableList<Pair<Int, Int>>, directionX: Int, directionY: Int) {
+        for (i in 1 until ChessBoard.BOARD_SIZE) {
+            val newX = x!! + i * directionX
+            val newY = y!! + i * directionY
+
+            if (!coordsInRange(newX, newY) || cells[newX][newY]!!.piece != null) {
+                break
+            }
+
             possibleMoves.add(Pair(newX, newY))
         }
     }
