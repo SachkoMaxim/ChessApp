@@ -53,14 +53,14 @@ class Cell(button: Button, piece: Piece?, board: ChessBoard) {
             }
 
             "Knight" -> {
-                addKnightMove(possibleMoves, 1, 2)
-                addKnightMove(possibleMoves, 1, -2)
-                addKnightMove(possibleMoves, -1, 2)
-                addKnightMove(possibleMoves, -1, -2)
-                addKnightMove(possibleMoves, 2, 1)
-                addKnightMove(possibleMoves, 2, -1)
-                addKnightMove(possibleMoves, -2, 1)
-                addKnightMove(possibleMoves, -2, -1)
+                addKnightOrKingMove(possibleMoves, 1, 2)
+                addKnightOrKingMove(possibleMoves, 1, -2)
+                addKnightOrKingMove(possibleMoves, -1, 2)
+                addKnightOrKingMove(possibleMoves, -1, -2)
+                addKnightOrKingMove(possibleMoves, 2, 1)
+                addKnightOrKingMove(possibleMoves, 2, -1)
+                addKnightOrKingMove(possibleMoves, -2, 1)
+                addKnightOrKingMove(possibleMoves, -2, -1)
             }
 
             "Bishop" -> {
@@ -81,7 +81,16 @@ class Cell(button: Button, piece: Piece?, board: ChessBoard) {
                 addHorizAndVertOrDiagMoves(possibleMoves, -1, -1)
             }
 
-            "King" -> {}
+            "King" -> {
+                addKnightOrKingMove(possibleMoves, 1, 0)
+                addKnightOrKingMove(possibleMoves, -1, 0)
+                addKnightOrKingMove(possibleMoves, 0, 1)
+                addKnightOrKingMove(possibleMoves, 0, -1)
+                addKnightOrKingMove(possibleMoves, 1, 1)
+                addKnightOrKingMove(possibleMoves, 1, -1)
+                addKnightOrKingMove(possibleMoves, -1, 1)
+                addKnightOrKingMove(possibleMoves, -1, -1)
+            }
         }
         return possibleMoves
     }
@@ -139,13 +148,13 @@ class Cell(button: Button, piece: Piece?, board: ChessBoard) {
         }
     }
 
-    private fun addKnightMove(
+    private fun addKnightOrKingMove(
         possibleMoves: MutableList<Pair<Int, Int>>,
-        offsetX: Int,
-        offsetY: Int
+        directionX: Int,
+        directionY: Int
     ) {
-        val newX = x!! + offsetX
-        val newY = y!! + offsetY
+        val newX = x!! + directionX
+        val newY = y!! + directionY
 
         if (coordsInRange(newX, newY) &&
             (cells[newX][newY]!!.piece == null ||
