@@ -52,7 +52,16 @@ class Cell(button: Button, piece: Piece?, board: ChessBoard) {
                 addHorizAndVertOrDiagMoves(possibleMoves, 0, -1)
             }
 
-            "Knight" -> {}
+            "Knight" -> {
+                addKnightMove(possibleMoves, 1, 2)
+                addKnightMove(possibleMoves, 1, -2)
+                addKnightMove(possibleMoves, -1, 2)
+                addKnightMove(possibleMoves, -1, -2)
+                addKnightMove(possibleMoves, 2, 1)
+                addKnightMove(possibleMoves, 2, -1)
+                addKnightMove(possibleMoves, -2, 1)
+                addKnightMove(possibleMoves, -2, -1)
+            }
 
             "Bishop" -> {
                 addHorizAndVertOrDiagMoves(possibleMoves, 1, 1)
@@ -127,6 +136,22 @@ class Cell(button: Button, piece: Piece?, board: ChessBoard) {
             } else {
                 break // stop adding moves if a piece of its color is found
             }
+        }
+    }
+
+    private fun addKnightMove(
+        possibleMoves: MutableList<Pair<Int, Int>>,
+        offsetX: Int,
+        offsetY: Int
+    ) {
+        val newX = x!! + offsetX
+        val newY = y!! + offsetY
+
+        if (coordsInRange(newX, newY) &&
+            (cells[newX][newY]!!.piece == null ||
+                    cells[newX][newY]!!.piece?.color != piece!!.color)
+        ) {
+            possibleMoves.add(Pair(newX, newY))
         }
     }
 
