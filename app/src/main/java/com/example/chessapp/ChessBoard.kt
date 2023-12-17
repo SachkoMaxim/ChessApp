@@ -6,6 +6,7 @@ import android.widget.Button
 import android.widget.GridLayout
 import android.widget.TextView
 import java.util.Collections
+import kotlin.math.abs
 
 class ChessBoard(activity: Activity) {
 
@@ -128,47 +129,64 @@ class ChessBoard(activity: Activity) {
 
     private fun doMove(cell: Cell) {
         if (!isMoveStarted && cell.piece != null && cell.piece?.color == currentTeam) {
-            selectedCell = cell
-            possibleMoves = selectedCell!!.getPossibleMoves()
-            isMoveStarted = true
+            startMove(cell)
         } else if (isMoveStarted && cell.piece != null && cell.piece?.color == currentTeam) {
-            selectedCell = cell
-            possibleMoves = selectedCell!!.getPossibleMoves()
+            startMove(cell)
         } else if (isMoveStarted && cell.piece?.color != currentTeam) {
-            if (possibleMoves.any { pair -> pair.first == cell.getX() && pair.second == cell.getY() }) {
-                activity.findViewById<TextView>(R.id.last_move_tv).apply {
-                    text = "${getChessCoords(selectedCell!!.getX()!!, selectedCell!!.getY()!!)} ${getChessCoords(cell.getX()!!, cell.getY()!!)} \n"
-                }
-                movePiece(selectedCell!!, cell)
-                selectedCell = null
-                isMoveStarted = false
-                switchCurrentTeam()
+            finishMove(cell)
+        }
+    }
+
+    private fun startMove(cell: Cell) {
+        selectedCell = cell
+        possibleMoves = selectedCell!!.getPossibleMoves()
+        if (selectedCell!!.piece is King && !selectedCell!!.piece!!.getIsMoved()) {
+            // Check castling
+            Log.d("Castling", "checking")
+        }
+        isMoveStarted = true
+    }
+
+    private fun finishMove(cell: Cell) {
+        if (possibleMoves.any { pair -> pair.first == cell.getX() && pair.second == cell.getY() }) {
+            activity.findViewById<TextView>(R.id.last_move_tv).apply {
+                text = "${getChessCoords(selectedCell!!.getX()!!, selectedCell!!.getY()!!)} ${getChessCoords(cell.getX()!!, cell.getY()!!)} \n"
             }
+            movePiece(selectedCell!!, cell)
+            selectedCell = null
+            isMoveStarted = false
+            switchCurrentTeam()
         }
     }
 
     private fun movePiece(selectedCell: Cell, cell: Cell) {
+        if (selectedCell.piece is King && abs(cell.getY()!! - selectedCell.getY()!!) == 2) {
+            // Do castling
+        } else {
+            moveNormalPiece(selectedCell, cell)
+        }
+    }
+
+    private fun moveNormalPiece(selectedCell: Cell, cell: Cell) {
         if (cell.piece == null) {
             cell.piece = selectedCell.piece
             selectedCell.piece = null
         } else {
             cell.piece = selectedCell.piece
             selectedCell.piece = null
-            if (currentTeam == WHITE) {
-                blackCells.remove(cell)
-            } else {
-                whiteCells.remove(cell)
-            }
+            val enemyCells = if (currentTeam == WHITE) blackCells else whiteCells
+            enemyCells.remove(cell)
         }
+
         if (cell.piece is Pawn) {
             checkForPromotion(cell)
         }
+
         cell.piece!!.setIsMoved()
-        if (currentTeam == WHITE) {
-            Collections.replaceAll(whiteCells, selectedCell, cell)
-        } else {
-            Collections.replaceAll(blackCells, selectedCell, cell)
-        }
+
+        val currentTeamCells = if (currentTeam == WHITE) whiteCells else blackCells
+        Collections.replaceAll(currentTeamCells, selectedCell, cell)
+
         show()
     }
 
