@@ -6,7 +6,6 @@ import android.widget.Button
 import android.widget.GridLayout
 import android.widget.TextView
 import java.util.Collections
-import kotlin.math.abs
 
 class ChessBoard(activity: Activity) {
 
@@ -141,15 +140,22 @@ class ChessBoard(activity: Activity) {
     private fun startMove(cell: Cell) {
         selectedCell = cell
         possibleMoves = selectedCell!!.getPossibleMoves()
-        if (selectedCell!!.piece is King && !selectedCell!!.piece!!.getIsMoved()) {
-            checkForCastling(selectedCell!!, possibleMoves)
-            Log.d("Castling", "checking")
-        }
         isMoveStarted = true
     }
 
     private fun finishMove(cell: Cell) {
         if (possibleMoves.any { pair -> pair.first == cell.getX() && pair.second == cell.getY() }) {
+            if (selectedCell!!.piece is King) {
+                // Check if this is a castling
+                val rook = cells[selectedCell!!.getX()!!][if (cell.getY() == 2) 0 else 7]!!
+                if (checkForCastling(selectedCell!!, rook)) {
+                    selectedCell = null
+                    isMoveStarted = false
+                    switchCurrentTeam()
+                    return
+                }
+            }
+
             activity.findViewById<TextView>(R.id.last_move_tv).apply {
                 text = "${getChessCoords(selectedCell!!.getX()!!, selectedCell!!.getY()!!)} ${getChessCoords(cell.getX()!!, cell.getY()!!)} \n"
             }
@@ -161,13 +167,7 @@ class ChessBoard(activity: Activity) {
     }
 
     private fun movePiece(selectedCell: Cell, cell: Cell) {
-        if (selectedCell!!.piece is King && abs(cell.getY()!! - selectedCell!!.getY()!!) == 2) {
-            val rookY = if (cell.getY()!! < selectedCell!!.getY()!!) 0 else BOARD_SIZE - 1
-            val rookCell = cells[selectedCell!!.getX()!!][rookY]!!
-            doCastling(selectedCell!!, rookCell)
-        } else {
-            moveNormalPiece(selectedCell, cell)
-        }
+        moveNormalPiece(selectedCell, cell)
     }
 
     private fun moveNormalPiece(selectedCell: Cell, cell: Cell) {
@@ -212,37 +212,37 @@ class ChessBoard(activity: Activity) {
         }
     }
 
-    private fun swapPieces(cell1: Cell, cell2: Cell) {
-        Log.d("Castling", "swapping cells ${getChessCoords(cell1.getX()!!, cell1.getY()!!)} and ${getChessCoords(cell2.getX()!!, cell2.getY()!!)}")
-        val tmp = cell1.piece
-        cell1.piece = cell2.piece
-        cell2.piece = tmp
-    }
-
-    private fun doCastling(king: Cell, rook: Cell) {
-        swapPieces(king, rook)
+    private fun doCastling(king: Cell, rook: Cell, kingTarget: Cell, rookTarget: Cell) {
         king.piece!!.setIsMoved()
         rook.piece!!.setIsMoved()
+
+        // Move the king and rook to their new marked cells
+        movePiece(king, kingTarget)
+        movePiece(rook, rookTarget)
     }
 
-    private fun checkForCastling(king: Cell, possibleMoves: MutableList<Pair<Int, Int>>) {
-        if (!king.piece!!.getIsMoved() && !isCheck) {
-            val rookY = if (currentTeam == WHITE) 0 else BOARD_SIZE - 1
-            val rookCell = cells[king.getX()!!][rookY]!!
-            val kingSideCell = cells[king.getX()!!][king.getY()!! + 1]!!
-            val queenSideCell = cells[king.getX()!!][king.getY()!! - 1]!!
+    private fun checkForCastling(king: Cell, rook: Cell): Boolean {
+        if (!king.piece!!.getIsMoved() && !rook.piece!!.getIsMoved()) {
+            val direction = if (rook.getY() == 0) 1 else -1
+            val startCol = if (rook.getY() == 0) 1 else 5
+            val endCol = if (rook.getY() == 0) 4 else 7
 
-            if (!rookCell.piece!!.getIsMoved()) {
-                // Checking that there are no pieces between the king and the rook for short casting
-                if (kingSideCell.piece == null && queenSideCell.piece == null) {
-                    possibleMoves.add(Pair(king.getX()!!, king.getY()!! + 2))
-                }
-
-                // Checking that there are no pieces between the king and the rook for long castling
-                if (kingSideCell.piece == null && queenSideCell.piece == null) {
-                    possibleMoves.add(Pair(king.getX()!!, king.getY()!! - 2))
+            for (col in startCol until endCol) {
+                if (cells[king.getX()!!][col]!!.piece != null) {
+                    return false
                 }
             }
+
+            val enemyCells = if (currentTeam == WHITE) blackCells else whiteCells
+            if (!king.isUnderAttack(enemyCells, true) && !rook.isUnderAttack(enemyCells, true)) {
+                val kingTarget = cells[king.getX()!!][king.getY()!! + 2 * direction]!!
+                val rookTarget = cells[king.getX()!!][king.getY()!! + direction]!!
+
+                doCastling(king, rook, kingTarget, rookTarget)
+                return true
+            }
         }
+
+        return false
     }
 }
