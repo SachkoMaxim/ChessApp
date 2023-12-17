@@ -20,6 +20,7 @@ class ChessBoard(activity: Activity) {
     private val cells: Array<Array<Cell?>> = Array(BOARD_SIZE) { Array(BOARD_SIZE) { null } }
     private lateinit var whiteCells: MutableList<Cell>
     private lateinit var blackCells: MutableList<Cell>
+    private var threateningCells = mutableListOf<Cell>()
     private lateinit var gridLayout: GridLayout
     private lateinit var mainActivity: MainActivity
 
@@ -141,7 +142,7 @@ class ChessBoard(activity: Activity) {
         selectedCell = cell
         possibleMoves = selectedCell!!.getPossibleMoves()
         if (selectedCell!!.piece is King && !selectedCell!!.piece!!.getIsMoved()) {
-            // Check castling
+            checkForCastling(selectedCell!!, possibleMoves)
             Log.d("Castling", "checking")
         }
         isMoveStarted = true
@@ -160,8 +161,10 @@ class ChessBoard(activity: Activity) {
     }
 
     private fun movePiece(selectedCell: Cell, cell: Cell) {
-        if (selectedCell.piece is King && abs(cell.getY()!! - selectedCell.getY()!!) == 2) {
-            // Do castling
+        if (selectedCell!!.piece is King && abs(cell.getY()!! - selectedCell!!.getY()!!) == 2) {
+            val rookY = if (cell.getY()!! < selectedCell!!.getY()!!) 0 else BOARD_SIZE - 1
+            val rookCell = cells[selectedCell!!.getX()!!][rookY]!!
+            doCastling(selectedCell!!, rookCell)
         } else {
             moveNormalPiece(selectedCell, cell)
         }
@@ -206,6 +209,40 @@ class ChessBoard(activity: Activity) {
         }
         activity.findViewById<TextView>(R.id.current_move_tv).apply {
             text = currentTeam + "\n"
+        }
+    }
+
+    private fun swapPieces(cell1: Cell, cell2: Cell) {
+        Log.d("Castling", "swapping cells ${getChessCoords(cell1.getX()!!, cell1.getY()!!)} and ${getChessCoords(cell2.getX()!!, cell2.getY()!!)}")
+        val tmp = cell1.piece
+        cell1.piece = cell2.piece
+        cell2.piece = tmp
+    }
+
+    private fun doCastling(king: Cell, rook: Cell) {
+        swapPieces(king, rook)
+        king.piece!!.setIsMoved()
+        rook.piece!!.setIsMoved()
+    }
+
+    private fun checkForCastling(king: Cell, possibleMoves: MutableList<Pair<Int, Int>>) {
+        if (!king.piece!!.getIsMoved() && !isCheck) {
+            val rookY = if (currentTeam == WHITE) 0 else BOARD_SIZE - 1
+            val rookCell = cells[king.getX()!!][rookY]!!
+            val kingSideCell = cells[king.getX()!!][king.getY()!! + 1]!!
+            val queenSideCell = cells[king.getX()!!][king.getY()!! - 1]!!
+
+            if (!rookCell.piece!!.getIsMoved()) {
+                // Checking that there are no pieces between the king and the rook for short casting
+                if (kingSideCell.piece == null && queenSideCell.piece == null) {
+                    possibleMoves.add(Pair(king.getX()!!, king.getY()!! + 2))
+                }
+
+                // Checking that there are no pieces between the king and the rook for long castling
+                if (kingSideCell.piece == null && queenSideCell.piece == null) {
+                    possibleMoves.add(Pair(king.getX()!!, king.getY()!! - 2))
+                }
+            }
         }
     }
 }
