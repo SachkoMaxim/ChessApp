@@ -90,6 +90,17 @@ class Cell(button: Button, piece: Piece?, board: ChessBoard) {
                 addKnightOrKingMove(possibleMoves, 1, -1)
                 addKnightOrKingMove(possibleMoves, -1, 1)
                 addKnightOrKingMove(possibleMoves, -1, -1)
+
+                if((piece!!.color == ChessBoard.WHITE && board.canShortCastlingWhite == true) ||
+                    (piece!!.color == ChessBoard.BLACK && board.canShortCastlingBlack == true))
+                {
+                    addKnightOrKingMove(possibleMoves, 0, 2)
+                }
+                if((piece!!.color == ChessBoard.WHITE && board.canLongCastlingWhite == true) ||
+                    (piece!!.color == ChessBoard.BLACK && board.canLongCastlingBlack == true))
+                {
+                    addKnightOrKingMove(possibleMoves, 0, -2)
+                }
             }
         }
         return possibleMoves
@@ -208,6 +219,10 @@ class Cell(button: Button, piece: Piece?, board: ChessBoard) {
         }
 
         return false
+    }
+
+    fun isRookMoved(): Boolean {
+        return piece is Rook && piece!!.getIsMoved()
     }
 
     fun isUnderAttack(enemyCells: MutableList<Cell>, isCheckingForMate: Boolean = false): Boolean {

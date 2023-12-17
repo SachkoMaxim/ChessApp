@@ -6,7 +6,6 @@ import android.widget.Button
 import android.widget.GridLayout
 import android.widget.TextView
 import java.util.Collections
-import kotlin.math.abs
 
 class ChessBoard(activity: Activity) {
 
@@ -15,6 +14,11 @@ class ChessBoard(activity: Activity) {
         var WHITE = "WHITE"
         var BLACK = "BLACK"
     }
+
+    var canLongCastlingWhite = false
+    var canLongCastlingBlack = false
+    var canShortCastlingWhite = false
+    var canShortCastlingBlack = false
 
     private val activity = activity
     private val cells: Array<Array<Cell?>> = Array(BOARD_SIZE) { Array(BOARD_SIZE) { null } }
@@ -141,33 +145,47 @@ class ChessBoard(activity: Activity) {
     private fun startMove(cell: Cell) {
         selectedCell = cell
         possibleMoves = selectedCell!!.getPossibleMoves()
+        if (selectedCell!!.piece is King) {
+            checkForLongCastling(selectedCell!!)
+            checkForShortCastling(selectedCell!!)
+        }
         isMoveStarted = true
     }
 
     private fun finishMove(cell: Cell) {
-        if (possibleMoves.any { pair -> pair.first == cell.getX() && pair.second == cell.getY() }) {
-            activity.findViewById<TextView>(R.id.last_move_tv).apply {
-                text = "${getChessCoords(selectedCell!!.getX()!!, selectedCell!!.getY()!!)} ${getChessCoords(cell.getX()!!, cell.getY()!!)} \n"
+        if (isMoveStarted) {
+            if (possibleMoves.any { pair -> pair.first == cell.getX() && pair.second == cell.getY() }) {
+
+                activity.findViewById<TextView>(R.id.last_move_tv).apply {
+                    text = "${getChessCoords(selectedCell!!.getX()!!, selectedCell!!.getY()!!)} ${getChessCoords(cell.getX()!!, cell.getY()!!)} \n"
+                }
+                movePiece(selectedCell!!, cell)
+                selectedCell = null
+                isMoveStarted = false
+                switchCurrentTeam()
             }
-            movePiece(selectedCell!!, cell)
-            selectedCell = null
-            isMoveStarted = false
-            switchCurrentTeam()
         }
     }
 
     private fun movePiece(selectedCell: Cell, cell: Cell) {
-        if (selectedCell.piece is King && abs(cell.getY()!! - selectedCell.getY()!!) == 2) {
-            val rookY = if (cell.getY()!! < selectedCell.getY()!!) 0 else BOARD_SIZE - 1
-            val rook = cells[selectedCell.getX()!!][rookY]!!
-            if (checkForCastling(selectedCell, rook)) {
-                doCastling(selectedCell, cell)
-            } else {
-                moveNormalPiece(selectedCell, cell)
-            }
-        } else {
-            moveNormalPiece(selectedCell, cell)
+        // Check if the moving piece is a king and is making a castling move
+        if (selectedCell.piece is King && (cell.getX()!! - selectedCell.getX()!!) == 0 &&
+            Math.abs(cell.getY()!! - selectedCell.getY()!!) == 2
+        ) {
+            // King is making a castling move
+            val direction = if (cell.getY()!! - selectedCell.getY()!! > 0) 1 else -1
+            val rookStartCol = if (direction > 0) BOARD_SIZE - 1 else 0
+            val rookEndCol = if (direction > 0) BOARD_SIZE - 3 else 2
+
+            val rook = cells[selectedCell.getX()!!][rookStartCol]!!
+            val rookDestination = cells[selectedCell.getX()!!][selectedCell.getY()!! + direction]!!
+
+            // Move the rook to the destination cell
+            moveNormalPiece(rook, rookDestination)
         }
+
+        // Move the selected piece to the destination cell
+        moveNormalPiece(selectedCell, cell)
     }
 
     private fun moveNormalPiece(selectedCell: Cell, cell: Cell) {
@@ -212,52 +230,109 @@ class ChessBoard(activity: Activity) {
         }
     }
 
-    fun doCastling(king: Cell, cell: Cell) {
-        var rookY = if (cell.getY()!! < king.getY()!!) {
-            0
+    private fun checkForLongCastling(king: Cell) {
+        if (!king.piece!!.getIsMoved()) {
+            val direction = -1
+
+            val rook = cells[king.getX()!!][0]!!
+            if (rook.piece is Rook && !rook.isRookMoved()) {
+                val startCol = 1
+                val endCol = 4
+
+                for (col in startCol until endCol) {
+                    if (cells[king.getX()!!][col]!!.piece != null) {
+                        if(king.piece!!.color == WHITE) {
+                            canLongCastlingWhite = false
+                        } else {
+                            canLongCastlingBlack = false
+                        }
+                        return
+                    }
+                }
+
+                val enemyCells = if (currentTeam == WHITE) blackCells else whiteCells
+                if (!king.isUnderAttack(enemyCells, true) &&
+                    !cells[king.getX()!!][king.getY()!! + 2 * direction]!!.isUnderAttack(enemyCells, true)
+                ) {
+                    if(king.piece!!.color == WHITE) {
+                        canLongCastlingWhite = true
+                    } else {
+                        canLongCastlingBlack = true
+                    }
+
+                } else {
+                    if(king.piece!!.color == WHITE) {
+                        canLongCastlingWhite = false
+                    } else {
+                        canLongCastlingBlack = false
+                    }
+                }
+            } else {
+                if(king.piece!!.color == WHITE) {
+                    canLongCastlingWhite = false
+                } else {
+                    canLongCastlingBlack = false
+                }
+            }
         } else {
-            BOARD_SIZE - 1
-        }
-        cells[king.getX()!!][rookY]!!.piece!!.setIsMoved()
-
-        if (rookY == 0) {
-            swapPieces(cells[king.getX()!!][rookY]!!, cells[king.getX()!!][king.getY()!! - 1]!!)
-            swapPieces(king, cell)
-        } else {
-            swapPieces(cells[king.getX()!!][rookY]!!, cells[king.getX()!!][king.getY()!! + 1]!!)
-            swapPieces(king, cell)
-        }
-    }
-
-    fun checkForCastling(king: Cell, rook: Cell): Boolean {
-        if (king.piece == null || rook.piece == null || king.piece!!.getIsMoved() || rook.piece!!.getIsMoved()) {
-            return false
-        }
-
-        val direction = if (rook.getY()!! < king.getY()!!) -1 else 1
-        for (i in king.getY()!! + direction until rook.getY()!! step direction) {
-            if (cells[king.getX()!!][i]!!.piece != null) {
-                return false
+            if(king.piece!!.color == WHITE) {
+                canLongCastlingWhite = false
+            } else {
+                canLongCastlingBlack = false
             }
         }
-
-        val enemyCells = if (currentTeam == WHITE) blackCells else whiteCells
-        if (king.isUnderAttack(enemyCells, true)) {
-            return false
-        }
-
-        val targetCell = if (rook.getY()!! < king.getY()!!) cells[king.getX()!!][king.getY()!! - 2] else cells[king.getX()!!][king.getY()!! + 2]
-        if (targetCell!!.isUnderAttack(enemyCells, true)) {
-            return false
-        }
-
-        return true
     }
 
-    private fun swapPieces(cell1: Cell, cell2: Cell) {
-        Log.d("Castling", "swapping cells ${getChessCoords(cell1.getX()!!, cell1.getY()!!)} and ${getChessCoords(cell2.getX()!!, cell2.getY()!!)}")
-        val tmp = cell1.piece
-        cell1.piece = cell2.piece
-        cell2.piece = tmp
+    private fun checkForShortCastling(king: Cell) {
+        if (!king.piece!!.getIsMoved()) {
+            val direction = 1
+
+            val rook = cells[king.getX()!!][BOARD_SIZE - 1]!!
+            if (rook.piece is Rook && !rook.isRookMoved()) {
+                val startCol = 5
+                val endCol = BOARD_SIZE - 1
+
+                for (col in startCol until endCol) {
+                    if (cells[king.getX()!!][col]!!.piece != null) {
+                        if(king.piece!!.color == WHITE) {
+                            canShortCastlingWhite = false
+                        } else {
+                            canShortCastlingBlack = false
+                        }
+                        return
+                    }
+                }
+
+                val enemyCells = if (currentTeam == WHITE) blackCells else whiteCells
+                if (!king.isUnderAttack(enemyCells, true) &&
+                    !cells[king.getX()!!][king.getY()!! + 2 * direction]!!.isUnderAttack(enemyCells, true)
+                ) {
+                    if(king.piece!!.color == WHITE) {
+                        canShortCastlingWhite = true
+                    } else {
+                        canShortCastlingBlack = true
+                    }
+
+                } else {
+                    if(king.piece!!.color == WHITE) {
+                        canShortCastlingWhite = false
+                    } else {
+                        canShortCastlingBlack = false
+                    }
+                }
+            } else {
+                if(king.piece!!.color == WHITE) {
+                    canShortCastlingWhite = false
+                } else {
+                    canShortCastlingBlack = false
+                }
+            }
+        } else {
+            if(king.piece!!.color == WHITE) {
+                canShortCastlingWhite = false
+            } else {
+                canShortCastlingBlack = false
+            }
+        }
     }
 }
