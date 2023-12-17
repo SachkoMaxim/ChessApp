@@ -175,7 +175,6 @@ class ChessBoard(activity: Activity) {
             // King is making a castling move
             val direction = if (cell.getY()!! - selectedCell.getY()!! > 0) 1 else -1
             val rookStartCol = if (direction > 0) BOARD_SIZE - 1 else 0
-            val rookEndCol = if (direction > 0) BOARD_SIZE - 3 else 2
 
             val rook = cells[selectedCell.getX()!!][rookStartCol]!!
             val rookDestination = cells[selectedCell.getX()!!][selectedCell.getY()!! + direction]!!
@@ -230,52 +229,71 @@ class ChessBoard(activity: Activity) {
         }
     }
 
-    private fun checkForLongCastling(king: Cell) {
+    fun checkForCastling(king: Cell, isShortCastling: Boolean) {
         if (!king.piece!!.getIsMoved()) {
-            val direction = -1
+            // Determine the direction for castling
+            val direction = if (isShortCastling) 1 else -1
 
-            val rook = cells[king.getX()!!][0]!!
+            // Checking if rook hasn't moved
+            val rookCol = if (isShortCastling) BOARD_SIZE - 1 else 0
+            val rook = cells[king.getX()!!][rookCol]!!
+
             if (rook.piece is Rook && !rook.isRookMoved()) {
-                val startCol = 1
-                val endCol = 4
+                // Checking whether the cells between king and rook are free
+                val startCol = if (isShortCastling) king.getY()!! + 1 else 1
+                val endCol = if (isShortCastling) BOARD_SIZE - 1 else king.getY()!!
 
                 for (col in startCol until endCol) {
                     if (cells[king.getX()!!][col]!!.piece != null) {
-                        if(king.piece!!.color == WHITE) {
-                            canLongCastlingWhite = false
-                        } else {
-                            canLongCastlingBlack = false
-                        }
+                        // There is a figure on the path of castling
+                        setCannotCastling(isShortCastling, king.piece!!.color)
                         return
                     }
                 }
 
+                // Checking that king is not in check and that his newly marked cell is not attacked
                 val enemyCells = if (currentTeam == WHITE) blackCells else whiteCells
-                if (!king.isUnderAttack(enemyCells, true) &&
-                    !cells[king.getX()!!][king.getY()!! + 2 * direction]!!.isUnderAttack(enemyCells, true)
-                ) {
-                    if(king.piece!!.color == WHITE) {
-                        canLongCastlingWhite = true
-                    } else {
-                        canLongCastlingBlack = true
-                    }
+                val destinationCol = king.getY()!! + 2 * direction
+                val destinationCell = cells[king.getX()!!][destinationCol]!!
 
+                if (!king.isUnderAttack(enemyCells, true) && !destinationCell.isUnderAttack(enemyCells, true)) {
+                    setCanCastling(isShortCastling, king.piece!!.color)
                 } else {
-                    if(king.piece!!.color == WHITE) {
-                        canLongCastlingWhite = false
-                    } else {
-                        canLongCastlingBlack = false
-                    }
+                    setCannotCastling(isShortCastling, king.piece!!.color)
                 }
             } else {
-                if(king.piece!!.color == WHITE) {
-                    canLongCastlingWhite = false
-                } else {
-                    canLongCastlingBlack = false
-                }
+                setCannotCastling(isShortCastling, king.piece!!.color)
             }
         } else {
-            if(king.piece!!.color == WHITE) {
+            setCannotCastling(isShortCastling, king.piece!!.color)
+        }
+    }
+
+    private fun setCanCastling(isShortCastling: Boolean, color: String) {
+        if(isShortCastling == true) {
+            if(color == WHITE) {
+                canShortCastlingWhite = true
+            } else {
+                canShortCastlingBlack = true
+            }
+        } else {
+            if(color == WHITE) {
+                canLongCastlingWhite = true
+            } else {
+                canLongCastlingBlack = true
+            }
+        }
+    }
+
+    private fun setCannotCastling(isShortCastling: Boolean, color: String) {
+        if(isShortCastling == true) {
+            if(color == WHITE) {
+                canShortCastlingWhite = false
+            } else {
+                canShortCastlingBlack = false
+            }
+        } else {
+            if(color == WHITE) {
                 canLongCastlingWhite = false
             } else {
                 canLongCastlingBlack = false
@@ -283,56 +301,11 @@ class ChessBoard(activity: Activity) {
         }
     }
 
+    private fun checkForLongCastling(king: Cell) {
+        checkForCastling(king, false)
+    }
+
     private fun checkForShortCastling(king: Cell) {
-        if (!king.piece!!.getIsMoved()) {
-            val direction = 1
-
-            val rook = cells[king.getX()!!][BOARD_SIZE - 1]!!
-            if (rook.piece is Rook && !rook.isRookMoved()) {
-                val startCol = 5
-                val endCol = BOARD_SIZE - 1
-
-                for (col in startCol until endCol) {
-                    if (cells[king.getX()!!][col]!!.piece != null) {
-                        if(king.piece!!.color == WHITE) {
-                            canShortCastlingWhite = false
-                        } else {
-                            canShortCastlingBlack = false
-                        }
-                        return
-                    }
-                }
-
-                val enemyCells = if (currentTeam == WHITE) blackCells else whiteCells
-                if (!king.isUnderAttack(enemyCells, true) &&
-                    !cells[king.getX()!!][king.getY()!! + 2 * direction]!!.isUnderAttack(enemyCells, true)
-                ) {
-                    if(king.piece!!.color == WHITE) {
-                        canShortCastlingWhite = true
-                    } else {
-                        canShortCastlingBlack = true
-                    }
-
-                } else {
-                    if(king.piece!!.color == WHITE) {
-                        canShortCastlingWhite = false
-                    } else {
-                        canShortCastlingBlack = false
-                    }
-                }
-            } else {
-                if(king.piece!!.color == WHITE) {
-                    canShortCastlingWhite = false
-                } else {
-                    canShortCastlingBlack = false
-                }
-            }
-        } else {
-            if(king.piece!!.color == WHITE) {
-                canShortCastlingWhite = false
-            } else {
-                canShortCastlingBlack = false
-            }
-        }
+        checkForCastling(king, true)
     }
 }
