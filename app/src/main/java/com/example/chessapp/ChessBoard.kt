@@ -156,6 +156,12 @@ class ChessBoard(activity: Activity) {
         if (isMoveStarted) {
             if (possibleMoves.any { pair -> pair.first == cell.getX() && pair.second == cell.getY() }) {
 
+                val enemyCells = if (currentTeam == WHITE) blackCells else whiteCells
+                if (selectedCell!!.piece is King && cell.isUnderAttack(enemyCells, true)) {
+                    // Destination cell is under attack, prevent the move
+                    return
+                }
+
                 activity.findViewById<TextView>(R.id.last_move_tv).apply {
                     text = "${getChessCoords(selectedCell!!.getX()!!, selectedCell!!.getY()!!)} ${getChessCoords(cell.getX()!!, cell.getY()!!)} \n"
                 }
