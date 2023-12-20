@@ -169,6 +169,8 @@ class ChessBoard(activity: Activity) {
                 selectedCell = null
                 isMoveStarted = false
                 switchCurrentTeam()
+
+                checkForCheckmate()
             }
         }
     }
@@ -313,5 +315,24 @@ class ChessBoard(activity: Activity) {
 
     private fun checkForShortCastling(king: Cell) {
         checkForCastling(king, true)
+    }
+
+    fun checkForCheckmate() {
+        val king = if (currentTeam == WHITE) whiteCells.find { it.piece is King } else blackCells.find { it.piece is King }
+
+        if (king != null) {
+            val enemyCells = if (currentTeam == WHITE) blackCells else whiteCells
+
+            // Check if the king is under attack
+            if (king.isUnderAttack(enemyCells)) {
+                // Check if the king has any legal moves
+                val legalMoves = king.getPossibleMoves(true)
+                if (legalMoves.isEmpty()) {
+                    // The king is in checkmate
+                    isMate = true
+                    Log.d("Checkmate", "Game over! ${currentTeam} is in checkmate.")
+                }
+            }
+        }
     }
 }
