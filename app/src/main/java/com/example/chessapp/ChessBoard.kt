@@ -327,20 +327,26 @@ class ChessBoard(activity: Activity) {
             if (king.isUnderAttack(enemyCells)) {
                 // Check if the king has any legal moves
                 val legalMoves = king.getPossibleMoves(true)
-
                 if (legalMoves.isEmpty()) {
                     // The king is in checkmate
                     isMate = true
                     Log.d("Checkmate", "Game over! ${currentTeam} is in checkmate.")
                 } else {
-                    // Check if the king can escape the check by capturing the attacking piece
-                    for (move in legalMoves) {
-                        val destCell = cells[move.first][move.second]!!
-                        if (destCell.piece != null && destCell.isUnderAttack(enemyCells, true)) {
-                            isMate = true
-                            Log.d("Checkmate", "Game over! ${currentTeam} is in checkmate.")
-                            break
+                    // Check if there is any piece that can block or capture the attacking piece
+                    val attackingPiece = enemyCells.find { cell ->
+                        cell.getPossibleMoves(true).any { move ->
+                            move.first == king.getX()!! && move.second == king.getY()!!
                         }
+                    }
+
+                    if (attackingPiece != null) {
+                        // The king is in check, but there are legal moves or pieces that can intervene
+                        isMate = false
+                        Log.d("Check", "${currentTeam} is in check.")
+                    } else {
+                        // No legal moves or pieces to intervene, it's checkmate
+                        isMate = true
+                        Log.d("Checkmate", "Game over! ${currentTeam} is in checkmate.")
                     }
                 }
             }
