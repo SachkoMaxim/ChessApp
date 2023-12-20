@@ -5,6 +5,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.GridLayout
 import android.widget.TextView
+import android.widget.Toast
 import java.util.Collections
 
 class ChessBoard(activity: Activity) {
@@ -319,6 +320,7 @@ class ChessBoard(activity: Activity) {
 
     fun checkForCheckmate() {
         val king = if (currentTeam == WHITE) whiteCells.find { it.piece is King } else blackCells.find { it.piece is King }
+        val enemyTeam = if (currentTeam == WHITE) BLACK else WHITE
 
         if (king != null) {
             val enemyCells = if (currentTeam == WHITE) blackCells else whiteCells
@@ -331,6 +333,7 @@ class ChessBoard(activity: Activity) {
                     // The king is in checkmate
                     isMate = true
                     Log.d("Checkmate", "Game over! ${currentTeam} is in checkmate.")
+                    onGameOver(enemyTeam)
                 } else {
                     // Check if there is any piece that can block or capture the attacking piece
                     val attackingPiece = enemyCells.find { cell ->
@@ -343,10 +346,12 @@ class ChessBoard(activity: Activity) {
                         // The king is in check, but there are legal moves or pieces that can intervene
                         isMate = false
                         Log.d("Check", "${currentTeam} is in check.")
+                        Toast.makeText(activity, "${currentTeam} is in check.", Toast.LENGTH_SHORT).show()
                     } else {
                         // No legal moves or pieces to intervene, it's checkmate
                         isMate = true
                         Log.d("Checkmate", "Game over! ${currentTeam} is in checkmate.")
+                        onGameOver(enemyTeam)
                     }
                 }
             }
@@ -354,6 +359,12 @@ class ChessBoard(activity: Activity) {
             // One team's king is missing, game over
             isMate = true
             Log.d("Checkmate", "Game over! ${currentTeam} has no king.")
+            onGameOver(enemyTeam)
         }
+    }
+
+    private fun onGameOver(team: String) {
+        Toast.makeText(activity, "${team} has made a mate! Game over!", Toast.LENGTH_SHORT).show()
+        switchButtonsBlocking(true)
     }
 }
