@@ -31,7 +31,6 @@ class MainActivity : AppCompatActivity() {
     lateinit var board: ChessBoard
     private var isGameStarted = false
     private var isGamePaused = true
-    private var isCheckmate = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,7 +67,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         informButton.setOnClickListener {
-            isCheckmate = !isCheckmate
+
         }
     }
 

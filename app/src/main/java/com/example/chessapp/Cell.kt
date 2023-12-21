@@ -183,44 +183,6 @@ class Cell(button: Button, piece: Piece?, board: ChessBoard) {
         piece = Queen(piece!!.color)
     }
 
-    fun getSurroundingCells(surroundingCells: MutableList<Cell>, isCheckingForMate: Boolean = false) {
-        val possibleMoves = mutableListOf<Pair<Int, Int>>()
-        for (i in (getX()!! - 1)..(getX()!! + 1)) {
-            for (j in (getY()!! - 1)..(getY()!! + 1)) {
-                if (coordsInRange(i, j) && (i != getX()!! || j != getY()!!)) {
-                    val cell = cells.getOrNull(i)?.getOrNull(j)
-                    if (cell != null && checkCellForFreeSpace(cell, possibleMoves, isCheckingForMate)) {
-                        surroundingCells.add(cell)
-                    }
-                }
-            }
-        }
-    }
-
-    private fun checkCellForFreeSpace(
-        cell: Cell,
-        possibleMoves: MutableList<Pair<Int, Int>>,
-        isCheckingForMate: Boolean = false
-    ): Boolean {
-        if (cell.piece == null) {
-            return true
-        }
-
-        if (cell.piece!!.color != piece!!.color) {
-            return true
-        }
-
-        if (isCheckingForMate) {
-            val cellCoords = Pair(cell.getX()!!, cell.getY()!!)
-            if (!possibleMoves.contains(cellCoords)) {
-                Log.d("Checking for mate", "hope it reached here")
-                possibleMoves.add(cellCoords)
-            }
-        }
-
-        return false
-    }
-
     fun isRookMoved(): Boolean {
         return piece is Rook && piece!!.getIsMoved()
     }

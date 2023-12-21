@@ -25,7 +25,6 @@ class ChessBoard(activity: Activity) {
     private val cells: Array<Array<Cell?>> = Array(BOARD_SIZE) { Array(BOARD_SIZE) { null } }
     private lateinit var whiteCells: MutableList<Cell>
     private lateinit var blackCells: MutableList<Cell>
-    private var threateningCells = mutableListOf<Cell>()
     private lateinit var gridLayout: GridLayout
     private lateinit var mainActivity: MainActivity
 
