@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var langButton: ImageButton
     lateinit var informButton: ImageButton
     lateinit var board: ChessBoard
+    lateinit var timer: GameTimer
     private var isGameStarted = false
     private var isGamePaused = true
 
@@ -53,6 +54,8 @@ class MainActivity : AppCompatActivity() {
         langButton = findViewById(R.id.lang_button)
         informButton = findViewById(R.id.inf_button)
         timerTextView = findViewById(R.id.main_timer)
+
+        timer = GameTimer(timerTextView)
 
         langButton.setOnClickListener {
             showLanguageSelectionDialog()
@@ -189,6 +192,7 @@ class MainActivity : AppCompatActivity() {
         pauseResumeButton.isEnabled = false
         clearBoard()
         clearGameInfo()
+        timer.reset()
     }
 
     private fun clearGameInfo() {
@@ -210,6 +214,7 @@ class MainActivity : AppCompatActivity() {
         }
         actBoard()
         resumeGame()
+        timer.start()
     }
 
     private fun pauseOrResumeGame() {
@@ -230,6 +235,7 @@ class MainActivity : AppCompatActivity() {
         pauseResumeButton.text = pauseResText
         val toastPauseText = if (currentLanguage == "English") "Game is paused" else "Гру зупинено"
         Toast.makeText(activity, toastPauseText, Toast.LENGTH_SHORT).show()
+        timer.pause()
     }
 
     private fun resumeGame() {
@@ -238,5 +244,6 @@ class MainActivity : AppCompatActivity() {
         pauseResumeButton.text = pauseResText
         val toastResumeText = if (currentLanguage == "English") "Game is resumed" else "Гру відновлено"
         Toast.makeText(activity, toastResumeText, Toast.LENGTH_SHORT).show()
+        timer.start()
     }
 }
