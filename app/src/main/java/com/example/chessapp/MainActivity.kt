@@ -16,6 +16,7 @@ class MainActivity : AppCompatActivity() {
     companion object {
         lateinit var currentLanguage: String
     }
+
     lateinit var activity: Activity
     lateinit var boardGrid: GridLayout
     lateinit var startResetButton: Button
@@ -86,6 +87,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun changeLanguage(selectedLanguage: String) {
         currentLanguage = selectedLanguage
+
+        // Update UI elements based on the selected language
         updateUI()
     }
 
@@ -211,7 +214,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun pauseOrResumeGame() {
-        if (!isCheckmate) {
+        if (board.getIsCheckmate()) {
             return
         }
         if (isGamePaused) {

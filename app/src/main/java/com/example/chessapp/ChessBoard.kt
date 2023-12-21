@@ -53,13 +53,13 @@ class ChessBoard(activity: Activity) {
     private var possibleMoves = mutableListOf<Pair<Int, Int>>()
     private var isMoveStarted = false
     private var isCheck = false
-    private var isMate = false
+    private var isCheckmate = false
 
     fun init(gridLayout: GridLayout, mainActivity: MainActivity) {
         this.gridLayout = gridLayout
         this.mainActivity = mainActivity
         isCheck = false
-        isMate = false
+        isCheckmate = false
         val cellsMutableList = mutableListOf<MutableList<Cell>>()
         var childCounter = 0
         for (i in 0 until BOARD_SIZE) {
@@ -331,7 +331,7 @@ class ChessBoard(activity: Activity) {
                 val legalMoves = king.getPossibleMoves(true)
                 if (legalMoves.isEmpty()) {
                     // The king is in checkmate
-                    isMate = true
+                    isCheckmate = true
                     Log.d("Checkmate", "Game over! ${currentTeam} is in checkmate.")
                     onGameOver(enemyTeam)
                 } else {
@@ -344,12 +344,12 @@ class ChessBoard(activity: Activity) {
 
                     if (attackingPiece != null) {
                         // The king is in check, but there are legal moves or pieces that can intervene
-                        isMate = false
+                        isCheckmate = false
                         Log.d("Check", "${currentTeam} is in check.")
                         Toast.makeText(activity, "${currentTeam} is in check.", Toast.LENGTH_SHORT).show()
                     } else {
                         // No legal moves or pieces to intervene, it's checkmate
-                        isMate = true
+                        isCheckmate = true
                         Log.d("Checkmate", "Game over! ${currentTeam} is in checkmate.")
                         onGameOver(enemyTeam)
                     }
@@ -357,7 +357,7 @@ class ChessBoard(activity: Activity) {
             }
         } else {
             // One team's king is missing, game over
-            isMate = true
+            isCheckmate = true
             Log.d("Checkmate", "Game over! ${currentTeam} has no king.")
             onGameOver(enemyTeam)
         }
@@ -367,4 +367,6 @@ class ChessBoard(activity: Activity) {
         Toast.makeText(activity, "${team} has made a mate! Game over!", Toast.LENGTH_SHORT).show()
         switchButtonsBlocking(true)
     }
+
+    fun getIsCheckmate(): Boolean = isCheckmate
 }
