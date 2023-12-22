@@ -91,14 +91,14 @@ class Cell(button: Button, piece: Piece?, board: ChessBoard) {
                 addKnightOrKingMove(possibleMoves, -1, 1)
                 addKnightOrKingMove(possibleMoves, -1, -1)
 
-                if((piece!!.color == ChessBoard.WHITE && board.canShortCastlingWhite == true) ||
-                    (piece!!.color == ChessBoard.BLACK && board.canShortCastlingBlack == true))
-                {
+                val canShortCastling = if (piece!!.color == ChessBoard.WHITE) board.canShortCastlingWhite else board.canShortCastlingBlack
+                val canLongCastling = if (piece!!.color == ChessBoard.WHITE) board.canLongCastlingWhite else board.canLongCastlingBlack
+
+                if(!piece!!.getIsMoved() && canShortCastling == true) {
                     addKnightOrKingMove(possibleMoves, 0, 2)
                 }
-                if((piece!!.color == ChessBoard.WHITE && board.canLongCastlingWhite == true) ||
-                    (piece!!.color == ChessBoard.BLACK && board.canLongCastlingBlack == true))
-                {
+
+                if(!piece!!.getIsMoved() && canLongCastling == true) {
                     addKnightOrKingMove(possibleMoves, 0, -2)
                 }
             }
