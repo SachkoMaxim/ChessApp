@@ -14,7 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 class MainActivity : AppCompatActivity() {
 
     companion object {
-        lateinit var currentLanguage: String
+        var currentLanguage = "English"
     }
 
     lateinit var activity: Activity
@@ -32,6 +32,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var timer: GameTimer
     private var isGameStarted = false
     private var isGamePaused = true
+    private val boardSize = ChessBoard.BOARD_SIZE - 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,8 +41,6 @@ class MainActivity : AppCompatActivity() {
         try {
             supportActionBar!!.hide()
         } catch (e: NullPointerException) {}
-
-        currentLanguage = "English"
 
         activity = this
         boardGrid = findViewById(R.id.board_grid)
@@ -103,6 +102,11 @@ class MainActivity : AppCompatActivity() {
             lastMoveText.text = "Last move:"
             mainTimerText.text = "Game time:"
             currentMoveText.text = "Current move:"
+            ChessBoard.teamWhite = "WHITE"
+            ChessBoard.teamBlack = "BLACK"
+            currentMoveTV.text = if (currentMoveTV.text == "\n") "\n" else
+                if (currentMoveTV.text == "БІЛИЙ\n" ||
+                    currentMoveTV.text == "WHITE\n") ChessBoard.teamWhite + "\n" else ChessBoard.teamBlack + "\n"
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 startResetButton.tooltipText = "Starts game or resets it if you started playing"
                 pauseResumeButton.tooltipText = "Pauses game or resumes it if you paused it"
@@ -117,6 +121,11 @@ class MainActivity : AppCompatActivity() {
             lastMoveText.text = "Останній хід:"
             mainTimerText.text = "Час гри:"
             currentMoveText.text = "Поточний хід:"
+            ChessBoard.teamWhite = "БІЛИЙ"
+            ChessBoard.teamBlack = "ЧОРНИЙ"
+            currentMoveTV.text = if (currentMoveTV.text == "\n") "\n" else
+                if (currentMoveTV.text == "БІЛИЙ\n" ||
+                    currentMoveTV.text == "WHITE\n") ChessBoard.teamWhite + "\n" else ChessBoard.teamBlack + "\n"
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 startResetButton.tooltipText = "Запускає гру або скидає її, якщо ви почали грати"
                 pauseResumeButton.tooltipText = "Призупиняє гру або відновлює її, якщо ви її призупинили"
@@ -133,8 +142,8 @@ class MainActivity : AppCompatActivity() {
             rowCount = 8
         }
         var currentIndex = 0
-        for (i in 0..7) {
-            for (j in 0..7) {
+        for (i in 0 until ChessBoard.BOARD_SIZE) {
+            for (j in 0 until ChessBoard.BOARD_SIZE) {
                 val cellButton = createCellButton()
                 boardGrid.addView(cellButton, currentIndex++)
 
@@ -165,7 +174,7 @@ class MainActivity : AppCompatActivity() {
             topMargin = 0
             rightMargin = 1
             columnSpec = GridLayout.spec(j)
-            rowSpec = GridLayout.spec(7 - i)
+            rowSpec = GridLayout.spec(boardSize - i)
         }
     }
 
@@ -210,7 +219,7 @@ class MainActivity : AppCompatActivity() {
         startResetButton.text = startResText
         pauseResumeButton.isEnabled = true
         activity.findViewById<TextView>(R.id.current_move_tv).apply {
-            text = "WHITE\n"
+            text = ChessBoard.teamWhite + "\n"
         }
         actBoard()
         resumeGame()

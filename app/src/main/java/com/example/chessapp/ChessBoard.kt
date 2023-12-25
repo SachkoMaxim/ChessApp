@@ -12,8 +12,10 @@ class ChessBoard(activity: Activity) {
 
     companion object {
         const val BOARD_SIZE = 8
-        var WHITE = "WHITE"
-        var BLACK = "BLACK"
+        const val WHITE = "WHITE"
+        const val BLACK = "BLACK"
+        var teamWhite = if(MainActivity.currentLanguage == "English") "WHITE" else "БІЛИЙ"
+        var teamBlack = if(MainActivity.currentLanguage == "English") "BLACK" else "ЧОРНИЙ"
     }
 
     var canLongCastlingWhite = false
@@ -229,13 +231,18 @@ class ChessBoard(activity: Activity) {
     }
 
     private fun switchCurrentTeam() {
+        val currentTeamText = if (currentTeam == WHITE) {
+            teamBlack
+        } else {
+            teamWhite
+        }
         currentTeam = if (currentTeam == WHITE) {
             BLACK
         } else {
             WHITE
         }
         activity.findViewById<TextView>(R.id.current_move_tv).apply {
-            text = currentTeam + "\n"
+            text = currentTeamText + "\n"
         }
     }
 
