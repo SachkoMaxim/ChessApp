@@ -23,7 +23,7 @@ class Cell(button: Button, piece: Piece?, board: ChessBoard) {
     fun getX() = x
     fun getY() = y
 
-    fun getPossibleMoves(isCheckingForMate: Boolean = false): MutableList<Pair<Int, Int>> {
+    fun getPossibleMoves(): MutableList<Pair<Int, Int>> {
         val possibleMoves = mutableListOf<Pair<Int, Int>>()
         if (piece == null) {
             return possibleMoves
@@ -187,7 +187,7 @@ class Cell(button: Button, piece: Piece?, board: ChessBoard) {
         return piece is Rook && piece!!.getIsMoved()
     }
 
-    fun isUnderAttack(enemyCells: MutableList<Cell>, isCheckingForMate: Boolean = false): Boolean {
-        return enemyCells.any { cell -> cell.getPossibleMoves(isCheckingForMate).any { move -> move.first == getX()!! && move.second == getY()!! } }
+    fun isUnderAttack(enemyCells: MutableList<Cell>): Boolean {
+        return enemyCells.any { cell -> cell.getPossibleMoves().any { move -> move.first == getX()!! && move.second == getY()!! } }
     }
 }

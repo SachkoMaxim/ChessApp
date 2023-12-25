@@ -22,6 +22,7 @@ class ChessBoard(activity: Activity) {
     var canShortCastlingBlack = false
 
     private val activity = activity
+    private val boardSize = BOARD_SIZE - 1
     private val cells: Array<Array<Cell?>> = Array(BOARD_SIZE) { Array(BOARD_SIZE) { null } }
     private lateinit var whiteCells: MutableList<Cell>
     private lateinit var blackCells: MutableList<Cell>
@@ -157,13 +158,14 @@ class ChessBoard(activity: Activity) {
             if (possibleMoves.any { pair -> pair.first == cell.getX() && pair.second == cell.getY() }) {
 
                 val enemyCells = if (currentTeam == WHITE) blackCells else whiteCells
-                if (selectedCell!!.piece is King && cell.isUnderAttack(enemyCells, true)) {
+                if (selectedCell!!.piece is King && cell.isUnderAttack(enemyCells)) {
                     // Destination cell is under attack, prevent the move
                     return
                 }
 
                 activity.findViewById<TextView>(R.id.last_move_tv).apply {
-                    text = "${getChessCoords(selectedCell!!.getX()!!, selectedCell!!.getY()!!)} ${getChessCoords(cell.getX()!!, cell.getY()!!)} \n"
+                    text = "${getChessCoords(selectedCell!!.getX()!!, selectedCell!!.getY()!!)} " +
+                            "${getChessCoords(cell.getX()!!, cell.getY()!!)} \n"
                 }
                 movePiece(selectedCell!!, cell)
                 selectedCell = null
@@ -182,7 +184,7 @@ class ChessBoard(activity: Activity) {
         ) {
             // King is making a castling move
             val direction = if (cell.getY()!! - selectedCell.getY()!! > 0) 1 else -1
-            val rookStartCol = if (direction > 0) BOARD_SIZE - 1 else 0
+            val rookStartCol = if (direction > 0) boardSize else 0
 
             val rook = cells[selectedCell.getX()!!][rookStartCol]!!
             val rookDestination = cells[selectedCell.getX()!!][selectedCell.getY()!! + direction]!!
@@ -219,7 +221,7 @@ class ChessBoard(activity: Activity) {
     }
 
     private fun checkForPromotion(cell: Cell) {
-        if (cell.piece!!.color == WHITE && cell.getX() == BOARD_SIZE - 1 ||
+        if (cell.piece!!.color == WHITE && cell.getX() == boardSize ||
             cell.piece!!.color == BLACK && cell.getX() == 0
         ) {
             cell.promotePawn()
@@ -243,18 +245,18 @@ class ChessBoard(activity: Activity) {
             val direction = if (isShortCastling) 1 else -1
 
             // Checking if rook hasn't moved
-            val rookCol = if (isShortCastling) BOARD_SIZE - 1 else 0
+            val rookCol = if (isShortCastling) boardSize else 0
             val rook = cells[king.getX()!!][rookCol]!!
 
             if (rook.piece is Rook && !rook.isRookMoved()) {
                 // Checking whether the cells between king and rook are free
                 val startCol = if (isShortCastling) king.getY()!! + 1 else 1
-                val endCol = if (isShortCastling) BOARD_SIZE - 1 else king.getY()!!
+                val endCol = if (isShortCastling) boardSize else king.getY()!!
 
                 for (col in startCol until endCol) {
                     if (cells[king.getX()!!][col]!!.piece != null) {
                         // There is a figure on the path of castling
-                        setCannotCastling(isShortCastling, king.piece!!.color)
+                        setCastlingDef(isShortCastling, king.piece!!.color, false)
                         return
                     }
                 }
@@ -264,47 +266,31 @@ class ChessBoard(activity: Activity) {
                 val destinationCol = king.getY()!! + 2 * direction
                 val destinationCell = cells[king.getX()!!][destinationCol]!!
 
-                if (!king.isUnderAttack(enemyCells, true) && !destinationCell.isUnderAttack(enemyCells, true)) {
-                    setCanCastling(isShortCastling, king.piece!!.color)
+                if (!king.isUnderAttack(enemyCells) && !destinationCell.isUnderAttack(enemyCells)) {
+                    setCastlingDef(isShortCastling, king.piece!!.color, true)
                 } else {
-                    setCannotCastling(isShortCastling, king.piece!!.color)
+                    setCastlingDef(isShortCastling, king.piece!!.color, false)
                 }
             } else {
-                setCannotCastling(isShortCastling, king.piece!!.color)
+                setCastlingDef(isShortCastling, king.piece!!.color, false)
             }
         } else {
-            setCannotCastling(isShortCastling, king.piece!!.color)
+            setCastlingDef(isShortCastling, king.piece!!.color, false)
         }
     }
 
-    private fun setCanCastling(isShortCastling: Boolean, color: String) {
-        if(isShortCastling == true) {
-            if(color == WHITE) {
-                canShortCastlingWhite = true
+    private fun setCastlingDef(isShortCastling: Boolean, color: String, definition: Boolean) {
+        if (isShortCastling == true) {
+            if (color == WHITE) {
+                canShortCastlingWhite = definition
             } else {
-                canShortCastlingBlack = true
+                canShortCastlingBlack = definition
             }
         } else {
-            if(color == WHITE) {
-                canLongCastlingWhite = true
+            if (color == WHITE) {
+                canLongCastlingWhite = definition
             } else {
-                canLongCastlingBlack = true
-            }
-        }
-    }
-
-    private fun setCannotCastling(isShortCastling: Boolean, color: String) {
-        if(isShortCastling == true) {
-            if(color == WHITE) {
-                canShortCastlingWhite = false
-            } else {
-                canShortCastlingBlack = false
-            }
-        } else {
-            if(color == WHITE) {
-                canLongCastlingWhite = false
-            } else {
-                canLongCastlingBlack = false
+                canLongCastlingBlack = definition
             }
         }
     }
@@ -323,35 +309,19 @@ class ChessBoard(activity: Activity) {
 
         if (king != null) {
             val enemyCells = if (currentTeam == WHITE) blackCells else whiteCells
+            val attackingCell = getAttackingCell(king, enemyCells)
 
-            // Check if the king is under attack
-            if (king.isUnderAttack(enemyCells)) {
-                // Check if the king has any legal moves
-                val legalMoves = king.getPossibleMoves(true)
-                if (legalMoves.isEmpty()) {
+            if (isKingUnderAttack(king, enemyCells)) {
+                if (hasLegalMoves(king) || isAttackingCellUnderAttack(attackingCell!!)) {
+                    // The king is in check, but there are legal moves or pieces that can attack attacking piece
+                    isCheckmate = false
+                    Log.d("Check", "${currentTeam} is in check.")
+                    Toast.makeText(activity, "${currentTeam} is in check.", Toast.LENGTH_SHORT).show()
+                } else {
                     // The king is in checkmate
                     isCheckmate = true
                     Log.d("Checkmate", "Game over! ${currentTeam} is in checkmate.")
                     onGameOver(enemyTeam)
-                } else {
-                    // Check if there is any piece that can block or capture the attacking piece
-                    val attackingPiece = enemyCells.find { cell ->
-                        cell.getPossibleMoves(true).any { move ->
-                            move.first == king.getX()!! && move.second == king.getY()!!
-                        }
-                    }
-
-                    if (attackingPiece != null) {
-                        // The king is in check, but there are legal moves or pieces that can intervene
-                        isCheckmate = false
-                        Log.d("Check", "${currentTeam} is in check.")
-                        Toast.makeText(activity, "${currentTeam} is in check.", Toast.LENGTH_SHORT).show()
-                    } else {
-                        // No legal moves or pieces to intervene, it's checkmate
-                        isCheckmate = true
-                        Log.d("Checkmate", "Game over! ${currentTeam} is in checkmate.")
-                        onGameOver(enemyTeam)
-                    }
                 }
             }
         } else {
@@ -360,6 +330,58 @@ class ChessBoard(activity: Activity) {
             Log.d("Checkmate", "Game over! ${currentTeam} has no king.")
             onGameOver(enemyTeam)
         }
+    }
+
+    private fun getAttackingCell(king: Cell, enemyCells: List<Cell>): Cell? {
+        // Getting pieces that attack the king
+        val attackingPieces = enemyCells.filter { cell ->
+            cell.getPossibleMoves().any { move ->
+                move.first == king.getX() && move.second == king.getY()
+            }
+        }
+        Log.d("Attacking pieces", "Attacking pieces are: $attackingPieces.")
+
+        // If there are attacking pieces, return the cell that is attacking
+        return if (attackingPieces.isNotEmpty()) attackingPieces[0] else null
+    }
+
+    private fun isAttackingCellUnderAttack(attackingCell: Cell): Boolean {
+        val enemyCells = if (currentTeam == WHITE) whiteCells else blackCells
+
+        return isCellUnderAttack(attackingCell.getX()!!, attackingCell.getY()!!, enemyCells)
+    }
+
+    private fun isKingUnderAttack(king: Cell, enemyCells: List<Cell>): Boolean {
+        return enemyCells.any { cell ->
+            cell.getPossibleMoves()
+                .any { move -> move.first == king.getX()!! && move.second == king.getY()!! }
+        }
+    }
+
+    private fun isCellUnderAttack(x: Int, y: Int, enemyCells: List<Cell>): Boolean {
+        // Checking whether any enemy piece can attack the given cell
+        return enemyCells.any { cell ->
+            cell.getPossibleMoves().any { move -> move.first == x && move.second == y }
+        }
+    }
+
+    private fun hasLegalMoves(king: Cell): Boolean {
+        // Get all the possible moves for the king
+        val possibleMoves = king.getPossibleMoves()
+
+        // Get enemy pieces
+        val enemyCells = if (currentTeam == WHITE) blackCells else whiteCells
+
+        // Check each possible move of the king
+        for (move in possibleMoves) {
+            // Check if the cell to which the king can move is not under attack by the enemy
+            if (!isCellUnderAttack(move.first, move.second, enemyCells)) {
+                return true
+            }
+        }
+
+        // If none of the cells are safe, return false
+        return false
     }
 
     private fun onGameOver(team: String) {
