@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="eng_lang_select"><b>Select language</b></string>
+    <string name="eng_start">Start</string>
+    <string name="eng_reset">Reset</string>
+    <string name="eng_pause">Pause</string>
+    <string name="eng_resume">Resume</string>
+    <string name="eng_last_move">Last move:</string>
+    <string name="eng_game_time">Game time:</string>
+    <string name="eng_cur_move">Current move:</string>
+    <string name="eng_white">WHITE</string>
+    <string name="eng_black">BLACK</string>
+    <string name="eng_tool_start">Starts game or resets it if you started playing</string>
+    <string name="eng_tool_pause">Pauses game or resumes it if you paused it</string>
+    <string name="eng_tool_lang">Changes app language</string>
+    <string name="eng_tool_inf">Gives information on how to play the game</string>
+    <string name="eng_toast_pause">Game is paused</string>
+    <string name="eng_toast_resume">Game is resumed</string>
+    <string name="eng_toast_check">is in check.</string>
+    <string name="eng_toast_mate">has made a mate! Game over!</string>
+</resources>

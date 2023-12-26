@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ukr_lang_select"><b>Оберіть мову</b></string>
+    <string name="ukr_start">Почати</string>
+    <string name="ukr_reset">Скинути</string>
+    <string name="ukr_pause">Пауза</string>
+    <string name="ukr_resume">Відновити</string>
+    <string name="ukr_last_move">Останній хід:</string>
+    <string name="ukr_game_time">Час гри:</string>
+    <string name="ukr_cur_move">Поточний хід:</string>
+    <string name="ukr_white">БІЛИЙ</string>
+    <string name="ukr_black">ЧОРНИЙ</string>
+    <string name="ukr_tool_start">Запускає гру або скидає її, якщо ви почали грати</string>
+    <string name="ukr_tool_pause">Призупиняє гру або відновлює її, якщо ви її призупинили</string>
+    <string name="ukr_tool_lang">Змінює мову програми</string>
+    <string name="ukr_tool_inf">Дає інформацію про те, як грати в гру</string>
+    <string name="ukr_toast_pause">Гру зупинено</string>
+    <string name="ukr_toast_resume">Гру відновлено</string>
+    <string name="ukr_toast_check">під шахом.</string>
+    <string name="ukr_toast_mate">зробив мат! Гру завершено!</string>
+</resources>

@@ -14,8 +14,8 @@ class ChessBoard(activity: Activity) {
         const val BOARD_SIZE = 8
         const val WHITE = "WHITE"
         const val BLACK = "BLACK"
-        var teamWhite = if(MainActivity.currentLanguage == "English") "WHITE" else "БІЛИЙ"
-        var teamBlack = if(MainActivity.currentLanguage == "English") "BLACK" else "ЧОРНИЙ"
+        var TEAM_WHITE = if(MainActivity.CURRENT_LANGUAGE == "English") R.string.eng_white else R.string.ukr_white
+        var TEAM_BLACK = if(MainActivity.CURRENT_LANGUAGE == "English") R.string.eng_black else R.string.ukr_black
     }
 
     var canLongCastlingWhite = false
@@ -232,9 +232,9 @@ class ChessBoard(activity: Activity) {
 
     private fun switchCurrentTeam() {
         val currentTeamText = if (currentTeam == WHITE) {
-            teamBlack
+            activity.getString(TEAM_BLACK)
         } else {
-            teamWhite
+            activity.getString(TEAM_WHITE)
         }
         currentTeam = if (currentTeam == WHITE) {
             BLACK
@@ -312,7 +312,8 @@ class ChessBoard(activity: Activity) {
 
     fun checkForCheckmate() {
         val king = if (currentTeam == WHITE) whiteCells.find { it.piece is King } else blackCells.find { it.piece is King }
-        val enemyTeam = if (currentTeam == WHITE) BLACK else WHITE
+        val enemyTeamText = if (currentTeam == WHITE) activity.getString(TEAM_BLACK) else activity.getString(TEAM_WHITE)
+        val curTeamText = if (currentTeam == WHITE) activity.getString(TEAM_WHITE) else activity.getString(TEAM_BLACK)
 
         if (king != null) {
             val enemyCells = if (currentTeam == WHITE) blackCells else whiteCells
@@ -323,19 +324,21 @@ class ChessBoard(activity: Activity) {
                     // The king is in check, but there are legal moves or pieces that can attack attacking piece
                     isCheckmate = false
                     Log.d("Check", "${currentTeam} is in check.")
-                    Toast.makeText(activity, "${currentTeam} is in check.", Toast.LENGTH_SHORT).show()
+                    val toastCheck = if(MainActivity.CURRENT_LANGUAGE == "English") activity.getString(R.string.eng_toast_check)
+                        else activity.getString(R.string.ukr_toast_check)
+                    Toast.makeText(activity, "${curTeamText} ${toastCheck}", Toast.LENGTH_SHORT).show()
                 } else {
                     // The king is in checkmate
                     isCheckmate = true
                     Log.d("Checkmate", "Game over! ${currentTeam} is in checkmate.")
-                    onGameOver(enemyTeam)
+                    onGameOver(enemyTeamText)
                 }
             }
         } else {
             // One team's king is missing, game over
             isCheckmate = true
             Log.d("Checkmate", "Game over! ${currentTeam} has no king.")
-            onGameOver(enemyTeam)
+            onGameOver(enemyTeamText)
         }
     }
 
@@ -392,7 +395,9 @@ class ChessBoard(activity: Activity) {
     }
 
     private fun onGameOver(team: String) {
-        Toast.makeText(activity, "${team} has made a mate! Game over!", Toast.LENGTH_SHORT).show()
+        val toastMate = if(MainActivity.CURRENT_LANGUAGE == "English") activity.getString(R.string.eng_toast_mate)
+            else activity.getString(R.string.ukr_toast_mate)
+        Toast.makeText(activity, "${team} ${toastMate}", Toast.LENGTH_SHORT).show()
         switchButtonsBlocking(true)
     }
 

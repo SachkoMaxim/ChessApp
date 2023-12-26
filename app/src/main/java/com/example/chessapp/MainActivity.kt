@@ -14,7 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 class MainActivity : AppCompatActivity() {
 
     companion object {
-        var currentLanguage = "English"
+        var CURRENT_LANGUAGE = "English"
     }
 
     lateinit var activity: Activity
@@ -77,7 +77,8 @@ class MainActivity : AppCompatActivity() {
         val languageOptions = arrayOf("English", "Українська")
 
         val builder = AlertDialog.Builder(this)
-        builder.setTitle(if (currentLanguage == "English") "Select Language" else "Оберіть мову")
+        builder.setTitle(if (CURRENT_LANGUAGE == "English")
+            resources.getString(R.string.eng_lang_select) else resources.getString(R.string.ukr_lang_select))
             .setItems(languageOptions) { _, which ->
                 val selectedLanguage = languageOptions[which]
                 changeLanguage(selectedLanguage)
@@ -87,50 +88,58 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun changeLanguage(selectedLanguage: String) {
-        currentLanguage = selectedLanguage
+        CURRENT_LANGUAGE = selectedLanguage
 
         // Update UI elements based on the selected language
         updateUI()
     }
 
     private fun updateUI() {
-        if (currentLanguage == "English") {
-            startResetButton.text = if (startResetButton.text == "Почати" ||
-                startResetButton.text == "Start") "Start" else "Reset"
-            pauseResumeButton.text = if (pauseResumeButton.text == "Пауза" ||
-                pauseResumeButton.text == "Pause") "Pause" else "Resume"
-            lastMoveText.text = "Last move:"
-            mainTimerText.text = "Game time:"
-            currentMoveText.text = "Current move:"
-            ChessBoard.teamWhite = "WHITE"
-            ChessBoard.teamBlack = "BLACK"
+        if (CURRENT_LANGUAGE == "English") {
+            startResetButton.text = if (startResetButton.text == resources.getString(R.string.ukr_start) ||
+                startResetButton.text == resources.getString(R.string.eng_start))
+                resources.getString(R.string.eng_start) else resources.getString(R.string.eng_reset)
+            pauseResumeButton.text = if (pauseResumeButton.text == resources.getString(R.string.ukr_pause) ||
+                pauseResumeButton.text == resources.getString(R.string.eng_pause))
+                resources.getString(R.string.eng_pause) else resources.getString(R.string.eng_resume)
+            lastMoveText.text = resources.getString(R.string.eng_last_move)
+            mainTimerText.text = resources.getString(R.string.eng_game_time)
+            currentMoveText.text = resources.getString(R.string.eng_cur_move)
+            ChessBoard.TEAM_WHITE = R.string.eng_white
+            ChessBoard.TEAM_BLACK = R.string.eng_black
             currentMoveTV.text = if (currentMoveTV.text == "\n") "\n" else
-                if (currentMoveTV.text == "БІЛИЙ\n" ||
-                    currentMoveTV.text == "WHITE\n") ChessBoard.teamWhite + "\n" else ChessBoard.teamBlack + "\n"
+                if (currentMoveTV.text == resources.getString(R.string.eng_white) + "\n" ||
+                    currentMoveTV.text == resources.getString(R.string.ukr_white) + "\n")
+                    resources.getString(ChessBoard.TEAM_WHITE) + "\n"
+                else resources.getString(ChessBoard.TEAM_BLACK) + "\n"
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                startResetButton.tooltipText = "Starts game or resets it if you started playing"
-                pauseResumeButton.tooltipText = "Pauses game or resumes it if you paused it"
-                langButton.tooltipText = "Changes app language"
-                informButton.tooltipText = "Gives information on how to play the game"
+                startResetButton.tooltipText = resources.getString(R.string.eng_tool_start)
+                pauseResumeButton.tooltipText = resources.getString(R.string.eng_tool_pause)
+                langButton.tooltipText = resources.getString(R.string.eng_tool_lang)
+                informButton.tooltipText = resources.getString(R.string.eng_tool_inf)
             }
         } else {
-            startResetButton.text = if (startResetButton.text == "Start" ||
-                startResetButton.text == "Почати") "Почати" else "Скинути"
-            pauseResumeButton.text = if (pauseResumeButton.text == "Pause" ||
-                pauseResumeButton.text == "Пауза") "Пауза" else "Відновити"
-            lastMoveText.text = "Останній хід:"
-            mainTimerText.text = "Час гри:"
-            currentMoveText.text = "Поточний хід:"
-            ChessBoard.teamWhite = "БІЛИЙ"
-            ChessBoard.teamBlack = "ЧОРНИЙ"
+            startResetButton.text = if (startResetButton.text == resources.getString(R.string.eng_start) ||
+                startResetButton.text == resources.getString(R.string.ukr_start))
+                resources.getString(R.string.ukr_start) else resources.getString(R.string.ukr_reset)
+            pauseResumeButton.text = if (pauseResumeButton.text == resources.getString(R.string.eng_pause) ||
+                pauseResumeButton.text == resources.getString(R.string.ukr_pause))
+                resources.getString(R.string.ukr_pause) else resources.getString(R.string.ukr_resume)
+            lastMoveText.text = resources.getString(R.string.ukr_last_move)
+            mainTimerText.text = resources.getString(R.string.ukr_game_time)
+            currentMoveText.text = resources.getString(R.string.ukr_cur_move)
+            ChessBoard.TEAM_WHITE = R.string.ukr_white
+            ChessBoard.TEAM_BLACK = R.string.ukr_black
             currentMoveTV.text = if (currentMoveTV.text == "\n") "\n" else
-                if (currentMoveTV.text == "БІЛИЙ\n" ||
-                    currentMoveTV.text == "WHITE\n") ChessBoard.teamWhite + "\n" else ChessBoard.teamBlack + "\n"
+                if (currentMoveTV.text == resources.getString(R.string.ukr_white) + "\n" ||
+                    currentMoveTV.text == resources.getString(R.string.eng_white) + "\n")
+                    resources.getString(ChessBoard.TEAM_WHITE) + "\n"
+                else resources.getString(ChessBoard.TEAM_BLACK) + "\n"
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                startResetButton.tooltipText = "Запускає гру або скидає її, якщо ви почали грати"
-                pauseResumeButton.tooltipText = "Призупиняє гру або відновлює її, якщо ви її призупинили"
-                langButton.tooltipText = "Змінює мову програми"
-                informButton.tooltipText = "Дає інформацію про те, як грати в гру"
+                startResetButton.tooltipText = resources.getString(R.string.ukr_tool_start)
+                pauseResumeButton.tooltipText = resources.getString(R.string.ukr_tool_pause)
+                langButton.tooltipText = resources.getString(R.string.ukr_tool_lang)
+                informButton.tooltipText = resources.getString(R.string.ukr_tool_inf)
             }
         }
     }
@@ -193,10 +202,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun resetGame() {
         isGameStarted = false
-        val startResText = if (currentLanguage == "English") "Start" else "Почати"
+        val startResText = if (CURRENT_LANGUAGE == "English")
+            resources.getString(R.string.eng_start) else resources.getString(R.string.ukr_start)
         startResetButton.text = startResText
         pauseGame()
-        val pauseResText = if (currentLanguage == "English") "Pause" else "Пауза"
+        val pauseResText = if (CURRENT_LANGUAGE == "English")
+            resources.getString(R.string.eng_pause) else resources.getString(R.string.ukr_pause)
         pauseResumeButton.text = pauseResText
         pauseResumeButton.isEnabled = false
         clearBoard()
@@ -215,11 +226,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun startGame() {
         isGameStarted = true
-        val startResText = if (currentLanguage == "English") "Reset" else "Скинути"
+        val startResText = if (CURRENT_LANGUAGE == "English")
+            resources.getString(R.string.eng_reset) else resources.getString(R.string.ukr_reset)
         startResetButton.text = startResText
         pauseResumeButton.isEnabled = true
         activity.findViewById<TextView>(R.id.current_move_tv).apply {
-            text = ChessBoard.teamWhite + "\n"
+            text = resources.getString(ChessBoard.TEAM_WHITE) + "\n"
         }
         actBoard()
         resumeGame()
@@ -240,18 +252,22 @@ class MainActivity : AppCompatActivity() {
 
     private fun pauseGame() {
         isGamePaused = true
-        val pauseResText = if (currentLanguage == "English") "Resume" else "Відновити"
+        val pauseResText = if (CURRENT_LANGUAGE == "English")
+            resources.getString(R.string.eng_resume) else resources.getString(R.string.ukr_resume)
         pauseResumeButton.text = pauseResText
-        val toastPauseText = if (currentLanguage == "English") "Game is paused" else "Гру зупинено"
+        val toastPauseText = if (CURRENT_LANGUAGE == "English")
+            resources.getString(R.string.eng_toast_pause) else resources.getString(R.string.ukr_toast_pause)
         Toast.makeText(activity, toastPauseText, Toast.LENGTH_SHORT).show()
         timer.pause()
     }
 
     private fun resumeGame() {
         isGamePaused = false
-        val pauseResText = if (currentLanguage == "English") "Pause" else "Пауза"
+        val pauseResText = if (CURRENT_LANGUAGE == "English")
+            resources.getString(R.string.eng_pause) else resources.getString(R.string.ukr_pause)
         pauseResumeButton.text = pauseResText
-        val toastResumeText = if (currentLanguage == "English") "Game is resumed" else "Гру відновлено"
+        val toastResumeText = if (CURRENT_LANGUAGE == "English")
+            resources.getString(R.string.eng_toast_resume) else resources.getString(R.string.ukr_toast_resume)
         Toast.makeText(activity, toastResumeText, Toast.LENGTH_SHORT).show()
         timer.start()
     }
