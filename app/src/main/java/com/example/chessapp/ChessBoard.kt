@@ -8,7 +8,7 @@ import android.widget.TextView
 import android.widget.Toast
 import java.util.Collections
 
-class ChessBoard(activity: Activity) {
+class ChessBoard(activity: Activity, timer: GameTimer) {
 
     companion object {
         const val BOARD_SIZE = 8
@@ -24,6 +24,7 @@ class ChessBoard(activity: Activity) {
     var canShortCastlingBlack = false
 
     private val activity = activity
+    private val timer = timer
     private val boardSize = BOARD_SIZE - 1
     private val cells: Array<Array<Cell?>> = Array(BOARD_SIZE) { Array(BOARD_SIZE) { null } }
     private lateinit var whiteCells: MutableList<Cell>
@@ -399,6 +400,7 @@ class ChessBoard(activity: Activity) {
             else activity.getString(R.string.ukr_toast_mate)
         Toast.makeText(activity, "${team} ${toastMate}", Toast.LENGTH_SHORT).show()
         switchButtonsBlocking(true)
+        timer.pause()
     }
 
     fun getIsCheckmate(): Boolean = isCheckmate

@@ -160,7 +160,7 @@ class MainActivity : AppCompatActivity() {
                 cellButton.layoutParams = param
             }
         }
-        board = ChessBoard(activity)
+        board = ChessBoard(activity, timer)
         board.init(boardGrid, this)
         board.show()
     }
