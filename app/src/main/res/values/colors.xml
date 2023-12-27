@@ -4,4 +4,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="app_back">#364036</color>
     <color name="butt_color">#5A6A5A</color>
+    <color name="exit_color">#652020</color>
 </resources>

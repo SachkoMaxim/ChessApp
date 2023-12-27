@@ -5,6 +5,7 @@
     <string name="eng_reset">Reset</string>
     <string name="eng_pause">Pause</string>
     <string name="eng_resume">Resume</string>
+    <string name="eng_exit">Exit</string>
     <string name="eng_last_move">Last move:</string>
     <string name="eng_game_time">Game time:</string>
     <string name="eng_cur_move">Current move:</string>
@@ -14,8 +15,97 @@
     <string name="eng_tool_pause">Pauses game or resumes it if you paused it</string>
     <string name="eng_tool_lang">Changes app language</string>
     <string name="eng_tool_inf">Gives information on how to play the game</string>
+    <string name="eng_tool_exit">Exits the app</string>
     <string name="eng_toast_pause">Game is paused</string>
     <string name="eng_toast_resume">Game is resumed</string>
     <string name="eng_toast_check">is in check.</string>
-    <string name="eng_toast_mate">has made a mate! Game over!</string>
+    <string name="eng_toast_mate">has made a checkmate! Game over!</string>
+    <string name="eng_inf_title"><b>Information</b></string>
+    <string name="eng_inf_exit"><b>Ok</b></string>
+    <string name="eng_inf_text">
+        <![CDATA[
+            "<div style='text-align: center; font-size: 23px;'><b>General provisions</b></div><br/>"
+
+            "<div style='width: 90%; margin: 0 auto; text-align: justify; text-indent: 20px;'>Chess is played by two players on
+                a board with 64 black and white cells, white and black pieces. A chessboard is usually called a chessboard. The
+                chessboard is placed in such a way that its first horizontal is near the player playing white. At the same time, the
+                rightmost corner field <b>h1</b> must be white. Each player has <span style='color: red;'>16</span> chess pieces:
+                <span style='color: blue;'>eight pawns, two rooks, two knights, two bishops, a queen and a king</span>. Players make
+                moves in turn. During each turn, a player can move <span style='color: red;'>only one</span> piece. An exception is
+                <b>castling</b> — a joint move of rook and king. The game begins with the player playing with white pieces. When
+                moving your piece to a cell occupied by an opponent's piece, the opponent's piece is removed from the board. Such a
+                move is called taking.</div><br/>"
+
+            "<div style='text-align: center; font-size: 23px;'><b>Rules for moving pieces</b></div><br/>"
+
+            "<div style='width: 90%; margin: 0 auto; text-align: justify; text-indent: 20px;'>•
+                <img src='file:///android_res/drawable/white_pawn.png' alt='Pawn' width='30' height='30'>
+                <span style='color: blue; font-style: italic;'>Pawn</span> — moves forward only vertically. The first move of a
+                pawn — white from the second, and black from the seventh horizontal — can be made two cells at once, jumping over
+                the third or sixth horizontal. From all other horizontals, the pawn can only move one cell forward. In addition,
+                the pawn can take any piece of the opponent that is in front of him at a distance of one cell diagonally. If the
+                white pawn has reached the eighth horizontal, or the black one — the first, then it can turn into any piece
+                (except the king) of the same color as the pawn.</div><br/>"
+
+            "<div style='width: 90%; margin: 0 auto; text-align: justify; text-indent: 20px;'>•
+                <img src='file:///android_res/drawable/white_rook.png' alt='Rook' width='30' height='30'>
+                <span style='color: blue; font-style: italic;'>Rook</span> — moves any number of cells vertically or
+                horizontally.</div><br/>"
+
+            "<div style='width: 90%; margin: 0 auto; text-align: justify; text-indent: 20px;'>•
+                <img src='file:///android_res/drawable/white_knight.png' alt='Knight' width='30' height='30'>
+                <span style='color: blue; font-style: italic;'>Knight</span> — is the only piece in the game that can jump over
+                other pieces — its own and the opponent's. The knight's move is similar to the letter \"L\". The knight moves one
+                cell vertically and two horizontally, or vice versa — two vertically and one horizontally in any direction.</div><br/>"
+
+            "<div style='width: 90%; margin: 0 auto; text-align: justify; text-indent: 20px;'>•
+                <img src='file:///android_res/drawable/white_bishop.png' alt='Bishop' width='30' height='30'>
+                <span style='color: blue; font-style: italic;'>Bishop</span> — moves any number of cells diagonally.</div><br/>"
+
+            "<div style='width: 90%; margin: 0 auto; text-align: justify; text-indent: 20px;'>•
+                <img src='file:///android_res/drawable/white_king.png' alt='King' width='30' height='30'>
+                <span style='color: blue; font-style: italic;'>King</span> — moves one cell vertically, horizontally or diagonally, or
+                two if it is a castling.</div><br/>"
+
+            "<div style='width: 90%; margin: 0 auto; text-align: justify; text-indent: 20px;'>•
+                <img src='file:///android_res/drawable/white_queen.png' alt='Queen' width='30' height='30'>
+                <span style='color: blue; font-style: italic;'>Queen</span> — moves any number of cells vertically, horizontally or
+                diagonally.</div><br/>"
+
+            "<div style='text-align: center; font-size: 23px;'><b>Some chess terms</b></div><br/>"
+
+            "<div style='width: 90%; margin: 0 auto; text-align: justify; text-indent: 20px;'><span style='color: red;'><b>
+                Check</b></span> — is a position in which the king of the player whose turn it is to make a move is
+                under attack by the opponent's pieces.</div><br/>"
+
+            "<div style='width: 90%; margin: 0 auto; text-align: justify; text-indent: 20px;'><span style='color: red;'><b>
+                Checkmate</b></span> — is a check against which there is no defense. The player who checkmate the
+                opponent's king wins the game.</div><br/>"
+
+            "<div style='width: 90%; margin: 0 auto; text-align: justify; text-indent: 20px;'><span style='color: red;'><b>
+                Castling</b></span> — is a move in chess in which the king is moved from his initial position across
+                one cell horizontally with the simultaneous movement of the rook to this cell. Castling is performed
+                as follows: the king moves horizontally two cells. At the same time, the rook is set on the cell through
+                which the king jumped, that is, the king is behind the rook with which he castled. Castling is considered
+                the king's move and the player must move the king first, and then the rook. In chess notation, a short rook
+                is written as <span style='font-style: italic;'>\"0-0\"</span>, a long one
+                is <span style='font-style: italic;'>\"0-0-0\"</span></div><br/>"
+
+            "<div style='text-align: center; font-size: 23px;'><b>Win, draw</b></div><br/>"
+
+            "<div style='width: 90%; margin: 0 auto; text-align: justify;'>The game is declared won by one
+                of the opponents if:</div><br/>"
+
+            "<div style='width: 90%; margin: 0 auto; text-align: justify; text-indent: 20px;'>•
+                <b>Checkmate is announced to the opponent's king.</b></div><br/>"
+
+            "<div style='width: 90%; margin: 0 auto; text-align: justify; text-indent: 20px;'>•
+                <b>The opponent declared himself defeated.</b></div><br/>"
+
+            "<div style='width: 90%; margin: 0 auto; text-align: justify;'>A game is declared a draw if:</div><br/>"
+
+            "<div style='width: 90%; margin: 0 auto; text-align: justify; text-indent: 20px;'>•
+                <b>By mutual consent of the players.</b></div><br/>"
+        ]]>
+    </string>
 </resources>

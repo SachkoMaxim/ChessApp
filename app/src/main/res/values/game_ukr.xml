@@ -5,6 +5,7 @@
     <string name="ukr_reset">Скинути</string>
     <string name="ukr_pause">Пауза</string>
     <string name="ukr_resume">Відновити</string>
+    <string name="ukr_exit">Вихід</string>
     <string name="ukr_last_move">Останній хід:</string>
     <string name="ukr_game_time">Час гри:</string>
     <string name="ukr_cur_move">Поточний хід:</string>
@@ -14,8 +15,99 @@
     <string name="ukr_tool_pause">Призупиняє гру або відновлює її, якщо ви її призупинили</string>
     <string name="ukr_tool_lang">Змінює мову програми</string>
     <string name="ukr_tool_inf">Дає інформацію про те, як грати в гру</string>
+    <string name="ukr_tool_exit">Виходе з програми</string>
     <string name="ukr_toast_pause">Гру зупинено</string>
     <string name="ukr_toast_resume">Гру відновлено</string>
     <string name="ukr_toast_check">під шахом.</string>
     <string name="ukr_toast_mate">зробив мат! Гру завершено!</string>
+    <string name="ukr_inf_title"><b>Довідка</b></string>
+    <string name="ukr_inf_exit"><b>Ок</b></string>
+    <string name="ukr_inf_text">
+        <![CDATA[
+            "<div style='text-align: center; font-size: 23px;'><b>Загальні положення</b></div><br/>"
+
+            "<div style='width: 90%; margin: 0 auto; text-align: justify; text-indent: 20px;'>Гра у шахи ведеться
+                двома гравцями за дошкою, що має 64 клітини чорного та білого кольору, фігурами білого та чорного кольорів.
+                Шахова дошка зазвичай називається шахівниця. Шахівницю розміщують таким чином, що її перша горизонталь перебуває
+                біля гравця, що грає білими. При цьому крайнє праве вуглове поле <b>h1</b> має бути білим. Кожен з гравців має
+                <span style='color: red;'>16</span> шахових фігур: <span style='color: blue;'>вісім пішаків, дві тури, двох
+                коней, двох слонів, ферзя та короля</span>. Гравці роблять ходи по черзі. Під час кожного ходу гравець може
+                перемістити <span style='color: red;'>лише одну</span> фігуру. Винятком є <b>рокіровка</b> — спільний хід турою
+                та королем. Гру розпочинає той з гравців, що грає фігурами білого кольору. При переміщенні своєї фігури на
+                клітину зайняту фігурою суперника, фігура суперника знімається з дошки. Такий хід називають взяття.</div><br/>"
+
+            "<div style='text-align: center; font-size: 23px;'><b>Правила пересування фігур</b></div><br/>"
+
+            "<div style='width: 90%; margin: 0 auto; text-align: justify; text-indent: 20px;'>•
+                <img src='file:///android_res/drawable/white_pawn.png' alt='Pawn' width='30' height='30'>
+                <span style='color: blue; font-style: italic;'>Пішак</span> — пересувається лише вперед по вертикалі. Перший
+                хід пішака — білого з другої, а чорного з сьомої горизонталі — можна зробити одразу на дві клітини,
+                перестрибнувши через третю або шосту горизонталь. З усіх інших горизонталей пішак може пересуватися лише
+                на одну клітину вперед. Крім цього пішак може взяти будь-яку фігуру супротивника, що перебуває попереду нього
+                на відстані однієї клітини по діагоналі. Якщо білий пішак досягнув восьмої горизонталі, або чорний — першої
+                то він може перетворитися на будь-яку фігуру (окрім короля) того ж кольору, що й пішак.</div><br/>"
+
+            "<div style='width: 90%; margin: 0 auto; text-align: justify; text-indent: 20px;'>•
+                <img src='file:///android_res/drawable/white_rook.png' alt='Rook' width='30' height='30'>
+                <span style='color: blue; font-style: italic;'>Тура (вежа, колісниця)</span> — пересувається на
+                будь-яку кількість клітин по вертикалі, або горизонталі.</div><br/>"
+
+            "<div style='width: 90%; margin: 0 auto; text-align: justify; text-indent: 20px;'>•
+                <img src='file:///android_res/drawable/white_knight.png' alt='Knight' width='30' height='30'>
+                <span style='color: blue; font-style: italic;'>Кінь</span> — єдина фігура у грі, яка може перестрибувати
+                через інші фігури — свої та суперника. Хід конем схожий на літеру «Г». Кінь пересувається на одну клітинку
+                по вертикалі та дві по горизонталі, або навпаки — на дві по вертикалі, та одну по горизонталі у будь-якому
+                напрямку.</div><br/>"
+
+            "<div style='width: 90%; margin: 0 auto; text-align: justify; text-indent: 20px;'>•
+                <img src='file:///android_res/drawable/white_bishop.png' alt='Bishop' width='30' height='30'>
+                <span style='color: blue; font-style: italic;'>Слон (офіцер, єпископ)</span> — пересувається на будь-яку
+                кількість клітин по діагоналі.</div><br/>"
+
+            "<div style='width: 90%; margin: 0 auto; text-align: justify; text-indent: 20px;'>•
+                <img src='file:///android_res/drawable/white_king.png' alt='King' width='30' height='30'>
+                <span style='color: blue; font-style: italic;'>Король</span> — ходить на одну клітину по вертикалі, горизонталі
+                або діагоналі або на дві, якщо це рокіровка.</div><br/>"
+
+            "<div style='width: 90%; margin: 0 auto; text-align: justify; text-indent: 20px;'>•
+                <img src='file:///android_res/drawable/white_queen.png' alt='Queen' width='30' height='30'>
+                <span style='color: blue; font-style: italic;'>Ферзь (Королева)</span> — пересувається на будь-яку кількість
+                клітин по вертикалі, горизонталі або діагоналі.</div><br/>"
+
+            "<div style='text-align: center; font-size: 23px;'><b>Деякі шахові терміни</b></div><br/>"
+
+            "<div style='width: 90%; margin: 0 auto; text-align: justify; text-indent: 20px;'><span style='color: red;'><b>
+                Шах</b></span> — становище під час якого король того гравця, чия черга робити хід, перебуває під атакою фігур
+                суперника.</div><br/>"
+
+            "<div style='width: 90%; margin: 0 auto; text-align: justify; text-indent: 20px;'><span style='color: red;'><b>
+                Мат</b></span> — шах, від якого не має захисту. Гравець, який поставив мат королю суперника
+                виграє партію.</div><br/>"
+
+            "<div style='width: 90%; margin: 0 auto; text-align: justify; text-indent: 20px;'><span style='color: red;'><b>
+                Рокірування</b></span> або <span style='color: red;'><b>рокіровка</b></span> — хід у шахах, при якому робиться
+                перехід короля з його початкової позиції через одне поле по горизонталі з одночасним рухом тури на це поле.
+                Рокірування виконується таким чином: король пересувається по горизонталі на дві клітини. Тура при цьому
+                встановлюється на клітину, через яку перестрибнув король, себто король опиняється за турою, з якою він зробив
+                рокіровку. Рокірування вважається ходом короля і гравець повинен першим пересувати саме короля, а потім —
+                туру. В шаховій нотації коротка рокіровка записується як <span style='font-style: italic;'>«0-0»</span>,
+                довга — <span style='font-style: italic;'>«0-0-0»</span></div><br/>"
+
+            "<div style='text-align: center; font-size: 23px;'><b>Перемога, нічия</b></div><br/>"
+
+            "<div style='width: 90%; margin: 0 auto; text-align: justify;'>Партія оголошується виграною одним із
+                суперників якщо:</div><br/>"
+
+            "<div style='width: 90%; margin: 0 auto; text-align: justify; text-indent: 20px;'>• <b>Оголошено мат королю
+                суперника.</b></div><br/>"
+
+            "<div style='width: 90%; margin: 0 auto; text-align: justify; text-indent: 20px;'>• <b>Суперник визнав себе
+                переможеним.</b></div><br/>"
+
+            "<div style='width: 90%; margin: 0 auto; text-align: justify;'>Партія оголошується нічиєю якщо:</div><br/>"
+
+            "<div style='width: 90%; margin: 0 auto; text-align: justify; text-indent: 20px;'>• <b>За взаємною
+                згодою гравців.</b></div><br/>"
+        ]]>
+    </string>
 </resources>

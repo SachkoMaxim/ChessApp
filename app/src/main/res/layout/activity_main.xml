@@ -61,75 +61,75 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/space_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text=""
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:id="@+id/space_text"
                 android:gravity="center_horizontal" />
 
             <TextView
+                android:id="@+id/main_timer_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Game time:"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:id="@+id/main_timer_text"
                 android:gravity="center_horizontal" />
 
             <TextView
+                android:id="@+id/main_timer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="00:00:00"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:id="@+id/main_timer"
                 android:gravity="center_horizontal" />
 
             <TextView
+                android:id="@+id/space"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text=""
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:id="@+id/space"
                 android:gravity="center_horizontal" />
 
             <TextView
+                android:id="@+id/last_move_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Last move:"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:id="@+id/last_move_text"
                 android:gravity="center_horizontal" />
 
             <TextView
+                android:id="@+id/last_move_tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="\n"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:id="@+id/last_move_tv"
                 android:gravity="center_horizontal" />
 
             <TextView
+                android:id="@+id/current_move_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Current move:"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:id="@+id/current_move_text"
                 android:gravity="center_horizontal" />
 
             <TextView
+                android:id="@+id/current_move_tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="\n"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:id="@+id/current_move_tv"
                 android:gravity="center_horizontal" />
 
             <LinearLayout
@@ -166,12 +166,12 @@
                 android:layout_gravity="center">
 
                 <TextView
+                    android:id="@+id/space_buttons"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text=""
                     android:textAlignment="center"
                     android:textColor="@color/white"
-                    android:id="@+id/space_buttons"
                     android:gravity="center_horizontal" />
 
             </LinearLayout>
@@ -182,24 +182,41 @@
                 android:layout_gravity="center">
 
                 <ImageButton
+                    android:id="@+id/lang_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="10dp"
                     android:background="@drawable/language"
                     android:text=""
                     android:layout_weight="1"
-                    android:id="@+id/lang_button"
                     android:tooltipText="Changes app language"/>
 
                 <ImageButton
+                    android:id="@+id/inf_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="10dp"
                     android:background="@drawable/information"
                     android:text=""
                     android:layout_weight="1"
-                    android:id="@+id/inf_button"
                     android:tooltipText="Gives information on how to play the game"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
+
+                <Button
+                    android:id="@+id/exit_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/exit_color"
+                    android:text="Exit"
+                    android:tooltipText="Exits the app" />
 
             </LinearLayout>
 
