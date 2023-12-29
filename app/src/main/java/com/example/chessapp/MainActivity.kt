@@ -3,6 +3,7 @@ package com.example.chessapp
 import android.app.Activity
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import android.webkit.WebView
 import android.widget.Button
 import android.widget.GridLayout
@@ -30,6 +31,10 @@ class MainActivity : AppCompatActivity() {
     lateinit var langButton: ImageButton
     lateinit var informButton: ImageButton
     lateinit var exitButton: Button
+    lateinit var queenButton: ImageButton
+    lateinit var knightButton: ImageButton
+    lateinit var rookButton: ImageButton
+    lateinit var bishopButton: ImageButton
     lateinit var winText: TextView
     lateinit var board: ChessBoard
     lateinit var timer: GameTimer
@@ -58,6 +63,10 @@ class MainActivity : AppCompatActivity() {
         timerTextView = findViewById(R.id.main_timer)
         exitButton = findViewById(R.id.exit_button)
         winText = findViewById(R.id.board_fixer)
+        queenButton = findViewById(R.id.queen_button)
+        knightButton = findViewById(R.id.knight_button)
+        rookButton = findViewById(R.id.rook_button)
+        bishopButton = findViewById(R.id.bishop_button)
 
         timer = GameTimer(timerTextView)
 
@@ -133,6 +142,10 @@ class MainActivity : AppCompatActivity() {
                 langButton.tooltipText = getString(R.string.eng_tool_lang)
                 informButton.tooltipText = getString(R.string.eng_tool_inf)
                 exitButton.tooltipText = getString(R.string.eng_tool_exit)
+                queenButton.tooltipText = getString(R.string.eng_tool_queen)
+                knightButton.tooltipText = getString(R.string.eng_tool_knight)
+                rookButton.tooltipText = getString(R.string.eng_tool_rook)
+                bishopButton.tooltipText = getString(R.string.eng_tool_bishop)
             }
         } else {
             startResetButton.text = if (startResetButton.text == getString(R.string.eng_start) ||
@@ -163,6 +176,10 @@ class MainActivity : AppCompatActivity() {
                 langButton.tooltipText = getString(R.string.ukr_tool_lang)
                 informButton.tooltipText = getString(R.string.ukr_tool_inf)
                 exitButton.tooltipText = getString(R.string.ukr_tool_exit)
+                queenButton.tooltipText = getString(R.string.ukr_tool_queen)
+                knightButton.tooltipText = getString(R.string.ukr_tool_knight)
+                rookButton.tooltipText = getString(R.string.ukr_tool_rook)
+                bishopButton.tooltipText = getString(R.string.ukr_tool_bishop)
             }
         }
     }
@@ -296,6 +313,25 @@ class MainActivity : AppCompatActivity() {
             getString(R.string.eng_toast_resume) else getString(R.string.ukr_toast_resume)
         Toast.makeText(activity, toastResumeText, Toast.LENGTH_SHORT).show()
         timer.start()
+    }
+
+    fun promoteButtons(show: Boolean) {
+        if (show == true) {
+            queenButton.visibility = View.VISIBLE
+            knightButton.visibility = View.VISIBLE
+            bishopButton.visibility = View.VISIBLE
+            rookButton.visibility = View.VISIBLE
+        } else {
+            queenButton.visibility = View.INVISIBLE
+            knightButton.visibility = View.INVISIBLE
+            bishopButton.visibility = View.INVISIBLE
+            rookButton.visibility = View.INVISIBLE
+        }
+        queenButton.isEnabled = show
+        knightButton.isEnabled = show
+        bishopButton.isEnabled = show
+        rookButton.isEnabled = show
+
     }
 
     fun showHelpDialog() {

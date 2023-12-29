@@ -174,7 +174,9 @@ class ChessBoard(activity: Activity, timer: GameTimer, winText: TextView) {
                 movePiece(selectedCell!!, cell)
                 selectedCell = null
                 isMoveStarted = false
-                switchCurrentTeam()
+                if (!(cell.piece is Pawn && (cell.getX() == 0 || cell.getX() == boardSize))) {
+                    switchCurrentTeam()
+                }
 
                 checkForCheckmate()
             }
@@ -228,8 +230,46 @@ class ChessBoard(activity: Activity, timer: GameTimer, winText: TextView) {
         if (cell.piece!!.color == WHITE && cell.getX() == boardSize ||
             cell.piece!!.color == BLACK && cell.getX() == 0
         ) {
-            cell.promotePawn()
+            mainActivity.promoteButtons(true)
+            switchButtonsBlocking(true)
+            val promotionText = if(MainActivity.CURRENT_LANGUAGE == "English") activity.getString(R.string.eng_toast_promote)
+                else activity.getString(R.string.ukr_toast_promote)
+            Toast.makeText(activity, "${promotionText}", Toast.LENGTH_SHORT).show()
+            promotePawn(cell)
         }
+    }
+
+    fun promotePawn(cell: Cell) {
+        // Handler for clicking on the "Queen" button
+        mainActivity.queenButton.setOnClickListener {
+            cell.promotePawnTo(Queen(currentTeam))
+            changeTeamAfterProm()
+        }
+
+        // Handler for clicking on the "Knight" button
+        mainActivity.knightButton.setOnClickListener {
+            cell.promotePawnTo(Knight(currentTeam))
+            changeTeamAfterProm()
+        }
+
+        // Handler for clicking on the "Bishop" button
+        mainActivity.bishopButton.setOnClickListener {
+            cell.promotePawnTo(Bishop(currentTeam))
+            changeTeamAfterProm()
+        }
+
+        // Handler for clicking on the "Rook" button
+        mainActivity.rookButton.setOnClickListener {
+            cell.promotePawnTo(Rook(currentTeam))
+            changeTeamAfterProm()
+        }
+    }
+
+    fun changeTeamAfterProm() {
+        mainActivity.promoteButtons(false)
+        switchButtonsBlocking(false)
+        switchCurrentTeam()
+        show()
     }
 
     private fun switchCurrentTeam() {

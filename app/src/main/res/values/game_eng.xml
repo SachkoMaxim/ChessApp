@@ -15,9 +15,14 @@
     <string name="eng_tool_pause">Pauses game or resumes it if you paused it</string>
     <string name="eng_tool_lang">Changes app language</string>
     <string name="eng_tool_inf">Gives information on how to play the game</string>
+    <string name="eng_tool_queen">Promotes pawn to queen</string>
+    <string name="eng_tool_knight">Promotes pawn to knight</string>
+    <string name="eng_tool_bishop">Promotes pawn to bishop</string>
+    <string name="eng_tool_rook">Promotes pawn to rook</string>
     <string name="eng_tool_exit">Exits the app</string>
     <string name="eng_toast_pause">Game is paused</string>
     <string name="eng_toast_resume">Game is resumed</string>
+    <string name="eng_toast_promote">Promote Pawn!</string>
     <string name="eng_toast_check">is in check.</string>
     <string name="eng_toast_mate">has made a checkmate! Game over!</string>
     <string name="eng_inf_title"><b>Information</b></string>

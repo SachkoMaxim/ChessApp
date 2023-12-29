@@ -179,8 +179,8 @@ class Cell(button: Button, piece: Piece?, board: ChessBoard) {
         return (x in 0 until ChessBoard.BOARD_SIZE && y in 0 until ChessBoard.BOARD_SIZE)
     }
 
-    fun promotePawn() {
-        piece = Queen(piece!!.color)
+    fun promotePawnTo(promotionPiece: Piece) {
+        piece = promotionPiece
     }
 
     fun isRookMoved(): Boolean {
