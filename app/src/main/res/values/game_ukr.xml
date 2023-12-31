@@ -14,6 +14,7 @@
     <string name="ukr_tool_start">Запускає гру або скидає її, якщо ви почали грати</string>
     <string name="ukr_tool_pause">Призупиняє гру або відновлює її, якщо ви її призупинили</string>
     <string name="ukr_tool_lang">Змінює мову програми</string>
+    <string name="ukr_tool_sound">Налаштування музики та звуку</string>
     <string name="ukr_tool_inf">Дає інформацію про те, як грати в гру</string>
     <string name="ukr_tool_queen">Підвищує пішака до королеви (ферзя)</string>
     <string name="ukr_tool_knight">Підвищує пішака до коня</string>
@@ -25,6 +26,11 @@
     <string name="ukr_toast_promote">Підвищте Пішака!</string>
     <string name="ukr_toast_check">під шахом.</string>
     <string name="ukr_toast_mate">зробив мат! Гру завершено!</string>
+    <string name="ukr_sound_title">Налаштування звуку</string>
+    <string name="ukr_sound_in_mute">Звук музики (ВИКЛЮЧЕНО)</string>
+    <string name="ukr_sound_not_mute">Звук музики (ВКЛЮЧЕНО)</string>
+    <string name="ukr_sound_cancel"><b>Відмінити</b></string>
+    <string name="ukr_sound_save"><b>Зберегти</b></string>
     <string name="ukr_inf_title"><b>Довідка</b></string>
     <string name="ukr_inf_exit"><b>Ок</b></string>
     <string name="ukr_inf_text">

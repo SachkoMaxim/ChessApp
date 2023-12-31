@@ -14,6 +14,7 @@
     <string name="eng_tool_start">Starts game or resets it if you started playing</string>
     <string name="eng_tool_pause">Pauses game or resumes it if you paused it</string>
     <string name="eng_tool_lang">Changes app language</string>
+    <string name="eng_tool_sound">Music and sound settings</string>
     <string name="eng_tool_inf">Gives information on how to play the game</string>
     <string name="eng_tool_queen">Promotes pawn to queen</string>
     <string name="eng_tool_knight">Promotes pawn to knight</string>
@@ -25,6 +26,11 @@
     <string name="eng_toast_promote">Promote Pawn!</string>
     <string name="eng_toast_check">is in check.</string>
     <string name="eng_toast_mate">has made a checkmate! Game over!</string>
+    <string name="eng_sound_title">Sound Settings</string>
+    <string name="eng_sound_in_mute">Music sound (OFF)</string>
+    <string name="eng_sound_not_mute">Music sound (ON)</string>
+    <string name="eng_sound_cancel"><b>Cancel</b></string>
+    <string name="eng_sound_save"><b>Save</b></string>
     <string name="eng_inf_title"><b>Information</b></string>
     <string name="eng_inf_exit"><b>Ok</b></string>
     <string name="eng_inf_text">

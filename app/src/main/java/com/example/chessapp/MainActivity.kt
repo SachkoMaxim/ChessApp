@@ -8,6 +8,8 @@ import android.webkit.WebView
 import android.widget.Button
 import android.widget.GridLayout
 import android.widget.ImageButton
+import android.widget.SeekBar
+import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -29,6 +31,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var currentMoveText: TextView
     lateinit var currentMoveTV: TextView
     lateinit var langButton: ImageButton
+    lateinit var soundButton: ImageButton
     lateinit var informButton: ImageButton
     lateinit var exitButton: Button
     lateinit var queenButton: ImageButton
@@ -41,6 +44,10 @@ class MainActivity : AppCompatActivity() {
     private var isGameStarted = false
     private var isGamePaused = true
     private val boardSize = ChessBoard.BOARD_SIZE - 1
+    lateinit var musicManager: MusicManager
+    private var isUnMute: Boolean = true
+    private var volume: Int = 100
+    private var switchText: String = "Music sound (ON)"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +65,7 @@ class MainActivity : AppCompatActivity() {
         mainTimerText = findViewById(R.id.main_timer_text)
         currentMoveText = findViewById(R.id.current_move_text)
         currentMoveTV = findViewById(R.id.current_move_tv)
+        soundButton = findViewById(R.id.sound_button)
         langButton = findViewById(R.id.lang_button)
         informButton = findViewById(R.id.inf_button)
         timerTextView = findViewById(R.id.main_timer)
@@ -67,6 +75,9 @@ class MainActivity : AppCompatActivity() {
         knightButton = findViewById(R.id.knight_button)
         rookButton = findViewById(R.id.rook_button)
         bishopButton = findViewById(R.id.bishop_button)
+
+        musicManager = MusicManager(this)
+        musicManager.playMenuMusic()
 
         timer = GameTimer(timerTextView)
 
@@ -80,6 +91,10 @@ class MainActivity : AppCompatActivity() {
 
         pauseResumeButton.setOnClickListener {
             pauseOrResumeGame()
+        }
+
+        soundButton.setOnClickListener {
+            showSettingsDialog()
         }
 
         informButton.setOnClickListener {
@@ -140,6 +155,7 @@ class MainActivity : AppCompatActivity() {
                 startResetButton.tooltipText = getString(R.string.eng_tool_start)
                 pauseResumeButton.tooltipText = getString(R.string.eng_tool_pause)
                 langButton.tooltipText = getString(R.string.eng_tool_lang)
+                soundButton.tooltipText = getString(R.string.eng_tool_sound)
                 informButton.tooltipText = getString(R.string.eng_tool_inf)
                 exitButton.tooltipText = getString(R.string.eng_tool_exit)
                 queenButton.tooltipText = getString(R.string.eng_tool_queen)
@@ -147,6 +163,8 @@ class MainActivity : AppCompatActivity() {
                 rookButton.tooltipText = getString(R.string.eng_tool_rook)
                 bishopButton.tooltipText = getString(R.string.eng_tool_bishop)
             }
+            switchText = if(isUnMute) getString(R.string.eng_sound_not_mute)
+                else getString(R.string.eng_sound_in_mute)
         } else {
             startResetButton.text = if (startResetButton.text == getString(R.string.eng_start) ||
                 startResetButton.text == getString(R.string.ukr_start))
@@ -174,6 +192,7 @@ class MainActivity : AppCompatActivity() {
                 startResetButton.tooltipText = getString(R.string.ukr_tool_start)
                 pauseResumeButton.tooltipText = getString(R.string.ukr_tool_pause)
                 langButton.tooltipText = getString(R.string.ukr_tool_lang)
+                soundButton.tooltipText = getString(R.string.ukr_tool_sound)
                 informButton.tooltipText = getString(R.string.ukr_tool_inf)
                 exitButton.tooltipText = getString(R.string.ukr_tool_exit)
                 queenButton.tooltipText = getString(R.string.ukr_tool_queen)
@@ -181,6 +200,8 @@ class MainActivity : AppCompatActivity() {
                 rookButton.tooltipText = getString(R.string.ukr_tool_rook)
                 bishopButton.tooltipText = getString(R.string.ukr_tool_bishop)
             }
+            switchText = if(isUnMute) getString(R.string.ukr_sound_not_mute)
+                else getString(R.string.ukr_sound_in_mute)
         }
     }
 
@@ -200,7 +221,7 @@ class MainActivity : AppCompatActivity() {
                 cellButton.layoutParams = param
             }
         }
-        board = ChessBoard(activity, timer, winText)
+        board = ChessBoard(activity, timer, musicManager, winText)
         board.init(boardGrid, this)
         board.show()
     }
@@ -253,6 +274,7 @@ class MainActivity : AppCompatActivity() {
         clearBoard()
         clearGameInfo()
         timer.reset()
+        musicManager.playMenuMusic()
     }
 
     private fun clearGameInfo() {
@@ -279,6 +301,7 @@ class MainActivity : AppCompatActivity() {
         actBoard()
         resumeGame()
         timer.start()
+        musicManager.playInGameMusic()
     }
 
     private fun pauseOrResumeGame() {
@@ -302,6 +325,7 @@ class MainActivity : AppCompatActivity() {
             getString(R.string.eng_toast_pause) else getString(R.string.ukr_toast_pause)
         Toast.makeText(activity, toastPauseText, Toast.LENGTH_SHORT).show()
         timer.pause()
+        musicManager.pauseMusic()
     }
 
     private fun resumeGame() {
@@ -313,6 +337,7 @@ class MainActivity : AppCompatActivity() {
             getString(R.string.eng_toast_resume) else getString(R.string.ukr_toast_resume)
         Toast.makeText(activity, toastResumeText, Toast.LENGTH_SHORT).show()
         timer.start()
+        musicManager.resumeMusic()
     }
 
     fun promoteButtons(show: Boolean) {
@@ -362,7 +387,80 @@ class MainActivity : AppCompatActivity() {
         dialog.show()
     }
 
+    private fun showSettingsDialog() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_settings, null)
+        val switchMute = dialogView.findViewById<Switch>(R.id.switchMute)
+        val seekBarVolume = dialogView.findViewById<SeekBar>(R.id.seekBarVolume)
+        switchMute.text = switchText
+
+        // Set current values
+        switchMute.isChecked = isUnMute
+        seekBarVolume.progress = volume
+
+        // Save the initial values before displaying the dialog box
+        val initialisUnMute = isUnMute
+        val initialVolume = volume
+        val initialSwitchText = switchText
+
+        val soundTitle = if (CURRENT_LANGUAGE == "English") getString(R.string.eng_sound_title)
+            else getString(R.string.ukr_sound_title)
+        val saveText = if (CURRENT_LANGUAGE == "English") getString(R.string.eng_sound_save)
+            else getString(R.string.ukr_sound_save)
+        val cancelText = if (CURRENT_LANGUAGE == "English") getString(R.string.eng_sound_cancel)
+            else getString(R.string.ukr_sound_cancel)
+
+        val builder = AlertDialog.Builder(this)
+        builder.setView(dialogView)
+            .setTitle(soundTitle)
+            .setPositiveButton(saveText) { _, _ ->
+                // Save settings only if changes have been made
+                if (initialisUnMute != switchMute.isChecked || initialVolume != seekBarVolume.progress) {
+                    isUnMute = switchMute.isChecked
+                    volume = seekBarVolume.progress
+
+                    musicManager.setMusicVolume(volume)
+
+                    if (isUnMute) {
+                        musicManager.setMusicMuted(false)
+                        switchText = if (CURRENT_LANGUAGE == "English") getString(R.string.eng_sound_not_mute)
+                            else getString(R.string.ukr_sound_not_mute)
+                        soundButton.setBackgroundResource(R.drawable.sound)
+                    } else {
+                        musicManager.setMusicMuted(true)
+                        switchText = if (CURRENT_LANGUAGE == "English") getString(R.string.eng_sound_in_mute)
+                            else getString(R.string.ukr_sound_in_mute)
+                        soundButton.setBackgroundResource(R.drawable.no_sound)
+                    }
+                }
+            }
+            .setNegativeButton(cancelText) { dialog, _ ->
+                // Restore initial values on cancellation
+                isUnMute = initialisUnMute
+                volume = initialVolume
+                switchText = initialSwitchText
+                dialog.dismiss()
+            }
+
+        builder.create().show()
+    }
+
     private fun exitGame() {
-        activity.finishAffinity()
+        musicManager.stopMusic()
+        finish()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        musicManager.pauseMusic()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        musicManager.resumeMusic()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        musicManager.pauseMusic()
     }
 }

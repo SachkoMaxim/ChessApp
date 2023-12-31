@@ -8,7 +8,7 @@ import android.widget.TextView
 import android.widget.Toast
 import java.util.Collections
 
-class ChessBoard(activity: Activity, timer: GameTimer, winText: TextView) {
+class ChessBoard(activity: Activity, timer: GameTimer, musicManager: MusicManager, winText: TextView) {
 
     companion object {
         const val BOARD_SIZE = 8
@@ -25,6 +25,7 @@ class ChessBoard(activity: Activity, timer: GameTimer, winText: TextView) {
 
     private val activity = activity
     private val timer = timer
+    var musicManager = musicManager
     private var winText = winText
     private val boardSize = BOARD_SIZE - 1
     private val cells: Array<Array<Cell?>> = Array(BOARD_SIZE) { Array(BOARD_SIZE) { null } }
@@ -444,6 +445,7 @@ class ChessBoard(activity: Activity, timer: GameTimer, winText: TextView) {
         winText.text = "${team} ${winEnd}"
         Toast.makeText(activity, "${team} ${toastMate}", Toast.LENGTH_SHORT).show()
         switchButtonsBlocking(true)
+        musicManager.playEndGameMusic()
         timer.pause()
     }
 
