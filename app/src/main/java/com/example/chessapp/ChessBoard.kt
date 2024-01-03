@@ -16,6 +16,7 @@ class ChessBoard(activity: Activity, timer: GameTimer, musicManager: MusicManage
         const val BLACK = "BLACK"
         var TEAM_WHITE = if(MainActivity.CURRENT_LANGUAGE == "English") R.string.eng_white else R.string.ukr_white
         var TEAM_BLACK = if(MainActivity.CURRENT_LANGUAGE == "English") R.string.eng_black else R.string.ukr_black
+        var CUR_TEAM = WHITE
     }
 
     var canLongCastlingWhite = false
@@ -233,8 +234,7 @@ class ChessBoard(activity: Activity, timer: GameTimer, musicManager: MusicManage
         ) {
             mainActivity.promoteButtons(true)
             switchButtonsBlocking(true)
-            val promotionText = if(MainActivity.CURRENT_LANGUAGE == "English") activity.getString(R.string.eng_toast_promote)
-                else activity.getString(R.string.ukr_toast_promote)
+            val promotionText = activity.resources.getString(activity.resources.getIdentifier("${MainActivity.LANG}_toast_promote", "string", activity.packageName))
             Toast.makeText(activity, "${promotionText}", Toast.LENGTH_SHORT).show()
             promotePawn(cell)
         }
@@ -274,16 +274,15 @@ class ChessBoard(activity: Activity, timer: GameTimer, musicManager: MusicManage
     }
 
     private fun switchCurrentTeam() {
-        val currentTeamText = if (currentTeam == WHITE) {
-            activity.getString(TEAM_BLACK)
+        var currentTeamText = ""
+        if (currentTeam == WHITE) {
+            currentTeamText = activity.getString(TEAM_BLACK)
+            currentTeam = BLACK
         } else {
-            activity.getString(TEAM_WHITE)
+            currentTeamText = activity.getString(TEAM_WHITE)
+            currentTeam = WHITE
         }
-        currentTeam = if (currentTeam == WHITE) {
-            BLACK
-        } else {
-            WHITE
-        }
+        CUR_TEAM = currentTeam
         activity.findViewById<TextView>(R.id.current_move_tv).apply {
             text = currentTeamText + "\n"
         }
@@ -367,8 +366,7 @@ class ChessBoard(activity: Activity, timer: GameTimer, musicManager: MusicManage
                     // The king is in check, but there are legal moves or pieces that can attack attacking piece
                     isCheckmate = false
                     Log.d("Check", "${currentTeam} is in check.")
-                    val toastCheck = if(MainActivity.CURRENT_LANGUAGE == "English") activity.getString(R.string.eng_toast_check)
-                        else activity.getString(R.string.ukr_toast_check)
+                    val toastCheck = activity.resources.getString(activity.resources.getIdentifier("${MainActivity.LANG}_toast_check", "string", activity.packageName))
                     Toast.makeText(activity, "${curTeamText} ${toastCheck}", Toast.LENGTH_SHORT).show()
                 } else {
                     // The king is in checkmate
@@ -438,10 +436,8 @@ class ChessBoard(activity: Activity, timer: GameTimer, musicManager: MusicManage
     }
 
     private fun onGameOver(team: String) {
-        val toastMate = if(MainActivity.CURRENT_LANGUAGE == "English") activity.getString(R.string.eng_toast_mate)
-            else activity.getString(R.string.ukr_toast_mate)
-        val winEnd = if(MainActivity.CURRENT_LANGUAGE == "English") "WON!"
-            else "ВИГРАВ!"
+        val toastMate = activity.resources.getString(activity.resources.getIdentifier("${MainActivity.LANG}_toast_mate", "string", activity.packageName))
+        val winEnd = activity.resources.getString(activity.resources.getIdentifier("${MainActivity.LANG}_win", "string", activity.packageName))
         winText.text = "${team} ${winEnd}"
         Toast.makeText(activity, "${team} ${toastMate}", Toast.LENGTH_SHORT).show()
         switchButtonsBlocking(true)

@@ -11,6 +11,7 @@
     <string name="ukr_cur_move">Поточний хід:</string>
     <string name="ukr_white">БІЛИЙ</string>
     <string name="ukr_black">ЧОРНИЙ</string>
+    <string name="ukr_win"> ВИГРАВ!</string>
     <string name="ukr_tool_start">Запускає гру або скидає її, якщо ви почали грати</string>
     <string name="ukr_tool_pause">Призупиняє гру або відновлює її, якщо ви її призупинили</string>
     <string name="ukr_tool_lang">Змінює мову програми</string>

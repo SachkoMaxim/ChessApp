@@ -11,6 +11,7 @@
     <string name="eng_cur_move">Current move:</string>
     <string name="eng_white">WHITE</string>
     <string name="eng_black">BLACK</string>
+    <string name="eng_win"> WON!</string>
     <string name="eng_tool_start">Starts game or resets it if you started playing</string>
     <string name="eng_tool_pause">Pauses game or resumes it if you paused it</string>
     <string name="eng_tool_lang">Changes app language</string>
