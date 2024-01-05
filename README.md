@@ -15,19 +15,19 @@ This project is a chess app for Android being developed by KPI FICE IM-22 group 
 
 _<b>Pause</b>_
 
-    You can pause the game if you want to chill or to think about your move.
+* You can pause the game if you want to chill or to think about your move.
 
 _<b>Timer</b>_
 
-    While playing, you can see timer showing the general game time.
+* While playing, you can see timer showing the general game time.
 
 _<b>Music</b>_
 
-    During the game, you can hear different music, which depends on the state of the game.
+* During the game, you can hear different music, which depends on the state of the game.
 
 _<b>Language changer</b>_
 
-    During the game (or in menu), you can change app language (only English and Ukrainian for now).
+* During the game (or in menu), you can change app language (only English and Ukrainian for now).
 
 ### How to run it on your device?
 <hr>
